@@ -14,7 +14,7 @@ from pydub import AudioSegment
 import speech_recognition as sr
 import io
 from moviepy.editor import VideoFileClip
-from dotenv import load_dotenv
+
 
 try:
     from english_backend import save_english_transcript
@@ -31,8 +31,8 @@ except:
 numbers = [number for number in range(300)]
 number_file = random.choice(numbers)
 
-load_dotenv()
-password = os.getenv("PASSWORD")
+
+password = os.environ.get('PASSWORD')
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
