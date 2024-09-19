@@ -1,13 +1,13 @@
 import streamlit as st
 from googletrans import Translator
 import json
-import MySQLdb
+import mysql.connector
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 password = os.getenv("PASSWORD")
-connection = MySQLdb.connect(
+connection = mysql.connector.connect(
     host="localhost",
     user="root",
     password=password,
