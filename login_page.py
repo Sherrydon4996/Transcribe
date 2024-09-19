@@ -4,15 +4,13 @@ from streamlit_cookies_manager import EncryptedCookieManager
 import os
 from PIL import Image
 import json
-from dotenv import load_dotenv
 import logging
 
 logging.basicConfig(level=logging.INFO)
 # port = int(os.environ.get('PORT', 5000))
 # app.run(host='0.0.0.0', port=port)
 
-load_dotenv()
-password = os.getenv("PASSWORD")
+password = os.environ.get('PASSWORD')
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
