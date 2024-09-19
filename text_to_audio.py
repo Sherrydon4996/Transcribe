@@ -7,17 +7,24 @@ from PIL import Image
 import tempfile
 import  mysql.connector
 
-password = os.environ.get('PASSWORD')
+
 
 # Establish MySQL connection (ensure credentials and database are correct)
-connection =  mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password=password,
-    database="media_files"
-)
-
-my_cursor = connection.cursor()
+try:
+    password = os.environ.get('PASSWORD')
+except:
+    st.error("Could not retrieve db passwd")
+try:
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password=password,
+        database="media_files"
+    )
+    
+    my_cursor = connection.cursor()
+except Exception as e:
+    st.warning(f"Database error: {e}")
 
 image_size = (1000, 900)
 
