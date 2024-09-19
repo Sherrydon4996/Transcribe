@@ -8,7 +8,7 @@ import glob
 from pathlib import Path
 import pandas as pd
 import random
-import MySQLdb
+import mysql.connector
 from streamlit_option_menu import option_menu
 from pydub import AudioSegment
 import speech_recognition as sr
@@ -33,7 +33,7 @@ number_file = random.choice(numbers)
 
 load_dotenv()
 password = os.getenv("PASSWORD")
-connection = MySQLdb.connect(
+connection = mysql.connector.connect(
     host="localhost",
     user="root",
     password=password,
