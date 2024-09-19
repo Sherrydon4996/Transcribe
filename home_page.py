@@ -31,16 +31,22 @@ except:
 numbers = [number for number in range(300)]
 number_file = random.choice(numbers)
 
+try:
+    password = os.environ.get('PASSWORD')
+except:
+    st.error("Could not retrieve db passwd")
 
-password = os.environ.get('PASSWORD')
-connection = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password=password,
-    database="media_files"
-)
-
-my_cursor = connection.cursor()
+try:
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password=password,
+        database="media_files"
+    )
+    
+    my_cursor = connection.cursor()
+except:
+    st.warning("Database error")
 
 
 def web_app_appearance():
