@@ -5,7 +5,7 @@ import os
 from random import randint
 from PIL import Image
 import tempfile
-import MySQLdb
+import  mysql.connector
 
 from dotenv import load_dotenv
 
@@ -13,7 +13,7 @@ load_dotenv()
 password = os.getenv("PASSWORD")
 
 # Establish MySQL connection (ensure credentials and database are correct)
-connection = MySQLdb.connect(
+connection =  mysql.connector.connect(
     host="localhost",
     user="root",
     password=password,
