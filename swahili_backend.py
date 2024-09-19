@@ -3,9 +3,7 @@ import time
 import os
 import streamlit as st
 import tempfile
-from dotenv import load_dotenv
 
-load_dotenv()
 password = os.environ.get('PASSWORD')
 
 API_KEY_ASSEMBLY = os.environ.get('ASSEMBLY_API_KEY')
