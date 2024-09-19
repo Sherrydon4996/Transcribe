@@ -6,10 +6,8 @@ import subprocess
 import os
 import  mysql.connector
 from language_translate import return_translated_text
-from dotenv import load_dotenv
 
-load_dotenv()
-password = os.getenv("PASSWORD")
+password = os.environ.get('PASSWORD')
 
 connection =  mysql.connector.connect(
     host="localhost",
