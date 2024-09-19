@@ -10,7 +10,6 @@ logging.basicConfig(level=logging.INFO)
 # port = int(os.environ.get('PORT', 5000))
 # app.run(host='0.0.0.0', port=port)
 
-password = os.environ.get('PASSWORD')
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
@@ -24,13 +23,22 @@ try:
 except:
     st.info("Unexpected error has occurred, try refreshing the page")
 
-connection = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password=password,
-    database="media_files"
-)
-my_cursor = connection.cursor()
+try:
+    password = os.environ.get('PASSWORD')
+except:
+    st.error("Could not retrieve db passwd")
+
+try:
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password=password,
+        database="media_files"
+    )
+    
+    my_cursor = connection.cursor()
+except Exception as e:
+    st.warning(f"Database error: {e}")
 
 cookies = EncryptedCookieManager(
     prefix="My_weApp",
