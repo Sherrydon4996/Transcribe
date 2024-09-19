@@ -1,7 +1,6 @@
 import hashlib
 import streamlit as st
 import string
-import MySQLdb
 import os
 import string
 
