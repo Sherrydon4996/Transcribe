@@ -1,5 +1,5 @@
 import streamlit as st
-import MySQLdb
+import  mysql.connector
 from streamlit_cookies_manager import EncryptedCookieManager
 import os
 from PIL import Image
@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 import logging
 
 logging.basicConfig(level=logging.INFO)
-port = int(os.environ.get('PORT', 5000))
-app.run(host='0.0.0.0', port=port)
+# port = int(os.environ.get('PORT', 5000))
+# app.run(host='0.0.0.0', port=port)
 
 load_dotenv()
 password = os.getenv("PASSWORD")
@@ -26,7 +26,7 @@ try:
 except:
     st.info("Unexpected error has occurred, try refreshing the page")
 
-connection = MySQLdb.connect(
+connection = mysql.connector.connect(
     host="localhost",
     user="root",
     password=password,
