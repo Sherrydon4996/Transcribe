@@ -7,10 +7,7 @@ from PIL import Image
 import tempfile
 import  mysql.connector
 
-from dotenv import load_dotenv
-
-load_dotenv()
-password = os.getenv("PASSWORD")
+password = os.environ.get('PASSWORD')
 
 # Establish MySQL connection (ensure credentials and database are correct)
 connection =  mysql.connector.connect(
