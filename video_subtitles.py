@@ -7,15 +7,22 @@ import os
 import  mysql.connector
 from language_translate import return_translated_text
 
-password = os.environ.get('PASSWORD')
+try:
+    password = os.environ.get('PASSWORD')
+except:
+    st.error("Could not retrieve db passwd")
 
-connection =  mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password=password,
-    database="media_files"
-)
-my_cursor = connection.cursor()
+try:
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password=password,
+        database="media_files"
+    )
+    
+    my_cursor = connection.cursor()
+except Exception as e:
+    st.warning(f"Database error: {e}")
 
 file_name = [i for i in range(50)]
 choice = random.choice(file_name)
