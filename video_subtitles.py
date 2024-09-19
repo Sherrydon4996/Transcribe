@@ -4,14 +4,14 @@ import random
 import tempfile
 import subprocess
 import os
-import MySQLdb
+import  mysql.connector
 from language_translate import return_translated_text
 from dotenv import load_dotenv
 
 load_dotenv()
 password = os.getenv("PASSWORD")
 
-connection = MySQLdb.connect(
+connection =  mysql.connector.connect(
     host="localhost",
     user="root",
     password=password,
