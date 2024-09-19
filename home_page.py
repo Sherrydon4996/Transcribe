@@ -45,8 +45,8 @@ try:
     )
     
     my_cursor = connection.cursor()
-except:
-    st.warning("Database error")
+except Exception as e:
+    st.warning(f"Database error: {e}")
 
 
 def web_app_appearance():
