@@ -6,9 +6,9 @@ import tempfile
 from dotenv import load_dotenv
 
 load_dotenv()
-password = os.getenv("PASSWORD")
+password = os.environ.get('PASSWORD')
 
-API_KEY_ASSEMBLY = os.getenv("ASSEMBLY_API_KEY")
+API_KEY_ASSEMBLY = os.environ.get('ASSEMBLY_API_KEY')
 
 upload_endpoint = "https://api.assemblyai.com/v2/upload"
 transcript_endpoint = "https://api.assemblyai.com/v2/transcript"
