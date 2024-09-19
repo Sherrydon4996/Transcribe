@@ -3,10 +3,8 @@ from googletrans import Translator
 import json
 import mysql.connector
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-password = os.getenv("PASSWORD")
+password = os.environ.get('PASSWORD')
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
