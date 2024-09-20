@@ -5,8 +5,9 @@ import os
 from PIL import Image
 import tempfile
 from pymongo import MongoClient
+import ssl
 
-from dotenv import load_dotenv
+
 
 
 # Establish MySQL connection (ensure credentials and database are correct)
