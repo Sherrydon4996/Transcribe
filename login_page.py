@@ -1,5 +1,4 @@
 import streamlit as st
-import MySQLdb
 from streamlit_cookies_manager import EncryptedCookieManager
 import os
 from PIL import Image
