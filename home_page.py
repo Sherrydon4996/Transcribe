@@ -73,12 +73,12 @@ def microphone_icon_appearance():
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col1:
         image_size = (800, 600)
-        img = Image.open("images/microphone.jpeg")
+        img = Image.open("static/microphone.jpeg")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
     with col2:
         image_size = (700, 350)
-        img = Image.open("images/transcribe.webp")
+        img = Image.open("static/transcribe.webp")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
         st.markdown("""
@@ -93,7 +93,7 @@ def microphone_icon_appearance():
 
     with col3:
         image_size = (800, 600)
-        img = Image.open("images/microphone.jpeg")
+        img = Image.open("static/microphone.jpeg")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
 
@@ -135,7 +135,7 @@ def remove_audio_files(directory, extensions=("*.mp3", "*.wav")):
 
 def english_transcription():
     button_styling()
-    english_icon = Image.open("images/English.png")
+    english_icon = Image.open("static/English.png")
     new_icon_size = (650, 400)
     english_image = english_icon.resize(new_icon_size, Image.LANCZOS)
     # if st.button("Transcribe English"):
