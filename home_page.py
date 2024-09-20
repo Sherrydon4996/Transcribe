@@ -31,10 +31,8 @@ except:
 numbers = [number for number in range(300)]
 number_file = random.choice(numbers)
 
-load_dotenv()
-password = os.getenv("PASSWORD")
 
-string_word = os.environ.get("STRING_WORD")
+string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
 client = MongoClient(string_word)
 db = client["Transcription"]
 
