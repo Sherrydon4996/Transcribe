@@ -36,7 +36,7 @@ number_file = random.choice(numbers)
 
 string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
 client = MongoClient(
-    "mongodb+srv://<username>:<password>@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority",
+    string_word,
     tls=True,
     tlsAllowInvalidCertificates=True,
     server_api=ServerApi('1')
