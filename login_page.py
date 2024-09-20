@@ -22,7 +22,7 @@ st.set_page_config(
 from validate_credentials import validate_email, hashing_password, empty_fields_alert, validate_password
 from home_page import recall_functions
 
-string_word = os.environ.get("STRING_WORD")
+string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
 client = MongoClient(string_word)
 
 
@@ -42,6 +42,7 @@ def database_table_structure():
     }
 
     """
+
 
 cookies = EncryptedCookieManager(
     prefix="My_weApp",
