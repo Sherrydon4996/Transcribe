@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import bcrypt
 from datetime import datetime
-import SSL
 from pymongo.server_api import ServerApi
 
 st.set_page_config(
