@@ -5,7 +5,6 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 import logging
-import ssl
 from pymongo.server_api import ServerApi
 
 
