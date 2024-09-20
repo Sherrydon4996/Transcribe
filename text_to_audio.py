@@ -8,12 +8,10 @@ from pymongo import MongoClient
 
 from dotenv import load_dotenv
 
-load_dotenv()
-password = os.getenv("PASSWORD")
 
 # Establish MySQL connection (ensure credentials and database are correct)
 string_word = os.environ.get("STRING_WORD")
-client = MongoClient(string_word)
+client = MongoClient(string_word, ssl=True, ssl_cert_reqs=ssl.CERT_NONE, tlsAllowInvalidCertificates=True)
 db = client["Transcription"]
 db_collection = db["user_registration"]
 
