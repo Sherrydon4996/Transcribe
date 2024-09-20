@@ -19,28 +19,27 @@ def language_analysis_menu():
         return analysis_type
 
 
-# def page_header():
-#     content = (" In text analysis, various techniques are employed to extract meaningful insights from written content."
-#                " Sentiment analysis assesses the emotional tone of a text, helping to understand whether the sentiment"
-#                " expressed is positive, negative, or neutral. Entity detection identifies and categorizes significant elements like names,"
-#                " organizations, and locations within the text. Content safety analysis ensures that the content"
-#                " is appropriate and adheres to guidelines, preventing harmful or offensive material from being shared."
-#                " Lastly, topic detection and summarization identify the main themes and key points within a text,"
-#                " making it easier to understand the central subjects and obtain concise overviews.")
-#     st.markdown(f"""
-#     <div style="background-color:#4CAF50; padding: 20px; border-radius: 10px; text-align: center;">
-#         <h1 style="color: white; font-family: 'Arial', sans-serif;">
-#             🎤 This is the last section where you can access all text analysis of your audio file. 🎧
-#         </h1>
-#         <p style="color: white; font-size: 18px;">
-#             {content}
-#         </p>
-#     </div>
-#     <br></br>
-#     """, unsafe_allow_html=True)
-#
-#
-# page_header()
+def page_header():
+    content = (" In text analysis, various techniques are employed to extract meaningful insights from written content."
+               " Sentiment analysis assesses the emotional tone of a text, helping to understand whether the sentiment"
+               " expressed is positive, negative, or neutral. Entity detection identifies and categorizes significant elements like names,"
+               " organizations, and locations within the text. Content safety analysis ensures that the content"
+               " is appropriate and adheres to guidelines, preventing harmful or offensive material from being shared."
+               " Lastly, topic detection and summarization identify the main themes and key points within a text,"
+               " making it easier to understand the central subjects and obtain concise overviews.")
+    st.markdown(f"""
+    <div style="background-color:#4CAF50; padding: 20px; border-radius: 10px; text-align: center;">
+        <h1 style="color: white; font-family: 'Arial', sans-serif;">
+            🎤 This is the last section where you can access all text analysis of your audio file. 🎧
+        </h1>
+        <p style="color: white; font-size: 18px;">
+            {content}
+        </p>
+    </div>
+    <br></br>
+    """, unsafe_allow_html=True)
+
+
 
 
 def display_no_category_banner(category):
@@ -414,6 +413,7 @@ def text_summary(analysis_type, temp_file):
 
 
 def call_functions(unfiltered_data):
+    page_header()
     
     try:
         if unfiltered_data is not None:
