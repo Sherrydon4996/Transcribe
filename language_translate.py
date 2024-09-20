@@ -89,9 +89,9 @@ def select_language():
 
     col11, col12, col13 = st.columns([3, 1, 3])
     with col11:
-        st.image("images/58.jpg")
+        st.image("static/58.jpg")
     with col13:
-        st.image("images/59.jpg")
+        st.image("static/59.jpg")
     st.subheader(":green[Select and set your target language]")
     with open("languages_value.json", "r") as file5:
         language_list = json.load(file5)
