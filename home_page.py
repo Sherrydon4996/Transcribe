@@ -14,7 +14,21 @@ import speech_recognition as sr
 import io
 from moviepy.editor import VideoFileClip
 from pymongo import MongoClient
-from pymongo.server_api import ServerApi
+import ssl
+
+
+# Create SSL context to enforce TLS 1.2
+ssl_context = ssl.create_default_context()
+ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2  # Enforce TLS 1.2 or later
+string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+client = MongoClient(
+    string_word,
+    ssl=True,
+    ssl_cert_reqs=ssl.CERT_REQUIRED,  # Ensure certificates are validated
+    tls=True,
+    ssl_context=ssl_context
+)
+
 
 
 
@@ -34,13 +48,8 @@ numbers = [number for number in range(300)]
 number_file = random.choice(numbers)
 
 
-string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-client = MongoClient(
-    string_word,
-    tls=True,
-    tlsAllowInvalidCertificates=True,
-    server_api=ServerApi('1')
-)
+
+
 db = client["Transcription"]
 
 
