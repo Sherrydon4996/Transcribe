@@ -8,7 +8,7 @@ import logging
 
 load_dotenv()
 password = os.getenv("PASSWORD")
-string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+string_word = os.environ.get("STRING_WORD")
 client = MongoClient(string_word)
 db = client["Transcription"]
 
