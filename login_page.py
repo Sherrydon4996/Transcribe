@@ -19,7 +19,7 @@ from validate_credentials import validate_email, hashing_password, empty_fields_
 from home_page import recall_functions
 
 string_word ="mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-client = MongoClient(string_word)
+client = MongoClient(string_word, ssl=True, ssl_cert_reqs=ssl.CERT_NONE, tlsAllowInvalidCertificates=True)
 
 
 def database_table_structure():
