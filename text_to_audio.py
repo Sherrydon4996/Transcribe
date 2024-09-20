@@ -203,11 +203,11 @@ def convert_text_to_audio(username):
     page_header()
     col1, col3, col6 = st.columns([1, 1, 1])
     with col1:
-        display_images("images/13.jpg")
+        display_images("static/13.jpg")
     with col3:
-        display_images("images/12.jpg")
+        display_images("static/12.jpg")
     with col6:
-        display_images("images/13.jpg")
+        display_images("static/13.jpg")
     text = "Choose the extension that you would want your file to end with.."
     banner_text(text)
     file_type = st.selectbox("Choose file format", ["mp3", "wav"])
