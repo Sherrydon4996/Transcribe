@@ -1,15 +1,16 @@
 import streamlit as st
-import  mysql.connector
+import MySQLdb
 from streamlit_cookies_manager import EncryptedCookieManager
 import os
 from PIL import Image
 import json
-import logging
+from dotenv import load_dotenv
+from pymongo import MongoClient
+import bcrypt
+from datetime import datetime
 
-logging.basicConfig(level=logging.INFO)
-# port = int(os.environ.get('PORT', 5000))
-# app.run(host='0.0.0.0', port=port)
-
+load_dotenv()
+password = os.getenv("PASSWORD")
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
@@ -17,28 +18,30 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-try:
-    from validate_credentials import validate_email, hashing_password, empty_fields_alert, validate_password
-    from home_page import recall_functions
-except:
-    st.info("Unexpected error has occurred, try refreshing the page")
 
-try:
-    password = os.environ.get('PASSWORD')
-except:
-    st.error("Could not retrieve db passwd")
+from validate_credentials import validate_email, hashing_password, empty_fields_alert, validate_password
+from home_page import recall_functions
 
-try:
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password,
-        database="media_files"
-    )
-    
-    my_cursor = connection.cursor()
-except Exception as e:
-    st.warning(f"Database error: {e}")
+string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+client = MongoClient(string_word)
+
+
+def database_table_structure():
+    """
+    database_structure
+    {
+    full_names: "",
+    username: "",
+    email: "",
+    amount: 0,
+    audio_filename:"",
+    srt_file:"",
+    json_file:"",
+    password: "",
+    current_time:"",
+    }
+
+    """
 
 cookies = EncryptedCookieManager(
     prefix="My_weApp",
@@ -136,52 +139,92 @@ def button_appearance():
     st.markdown(login_button_css, unsafe_allow_html=True)
 
 
-def save_credentials_to_database(username, email, first_name, new_password):
-    my_cursor.execute("insert into user_details(username, email, full_names, password) VALUES(%s,%s,%s,%s)",
-                      (username, email, first_name, new_password))
-    my_cursor.execute("update user_details set balance=%s where username=%s", (10, username))
-    connection.commit()
+def save_credentials_to_database(username, email, full_names, new_password):
+    # Hash the password
+    hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+    db = client["Transcription"]
+    user_collection = db["user_registration"]
+
+    # Insert new user into the collection
+    user_document = {
+        "username": username,
+        "email": email,
+        "full_names": full_names,
+        "password": hashed_password,
+        "amount": 10,  # Set initial balance to 10
+        "audio_filename": "",
+        "srt_file": "",
+        "json_file": "",
+        "current_time": datetime.now()  # Store current timestamp
+    }
+
+    # Insert the document into MongoDB
+    user_collection.insert_one(user_document)
 
 
 def get_logins(username):
-    my_cursor.execute("SELECT password from user_details where username=%s", (username,))
-    results = my_cursor.fetchone()
-    if results:
-        return results[0]
-    return
+    # Connect to MongoDB
+    db = client["Transcription"]
+    user_collection = db["user_registration"]
+
+    # Find the user by username
+    result = user_collection.find_one({"username": username}, {"password": 1, "_id": 0})
+
+    if result:
+        return result["password"]
+    return None
 
 
-def update_password(password, username):
-    my_cursor.execute("select * from user_details where username=%s", (username,))
-    results = my_cursor.fetchall()
-    if results:
-        if username in results[0]:
-            my_cursor.execute("update user_details set password=%s where username=%s", (password, username))
-            connection.commit()
-            return True
-    else:
-        return False
+def update_password(new_password, username):
+    # Connect to MongoDB
+    db = client["Transcription"]
+    user_collection = db["user_registration"]
+
+    # Check if the user exists
+    result = user_collection.find_one({"username": username})
+    if result:
+        # Hash the new password
+        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+
+        # Update the password
+        user_collection.update_one({"username": username}, {"$set": {"password": hashed_password}})
+        return True
+    return False
 
 
 def check_duplicate_registrations(username, email):
-    my_cursor.execute("select full_names, email from user_details where username=%s", (username,))
-    results = my_cursor.fetchall()
-    if results:
-        if username in results[0]:
-            return False
-        elif email in results[0]:
-            return False
-    else:
-        return True
+    # Connect to MongoDB
+    db = client["Transcription"]
+    user_collection = db["user_registration"]
+
+    # Check for username or email duplication
+    result = user_collection.find_one({"$or": [{"username": username}, {"email": email}]})
+
+    if result:
+        return False  # Duplicate found
+    return True  # No duplicates found
 
 
 def save_login_data(username):
-    my_cursor.execute("select full_names from user_details where username=%s", (username, ))
-    results = my_cursor.fetchone()
-    if results:
-        full_names = results[0]
-        my_cursor.execute("insert into login_info(username, full_names) VALUES(%s, %s)", (username, full_names))
-        connection.commit()
+    # Connect to MongoDB
+    db = client["Transcription"]
+
+    # Collections
+    user_collection = db["user_registration"]
+    login_collection = db["login_info"]
+
+    # Find the user's full name
+    result = user_collection.find_one({"username": username}, {"full_names": 1, "_id": 0})
+    if result:
+        full_names = result["full_names"]
+
+        # Insert login info into a separate collection
+        login_data = {
+            "username": username,
+            "full_names": full_names,
+            "login_time": datetime.now()  # Record login time
+        }
+        login_collection.insert_one(login_data)
 
 
 def show_registration_form():
@@ -189,7 +232,7 @@ def show_registration_form():
     col4, col5 = st.columns(2)
     with col4:
         size = (800, 450)
-        img = Image.open("static/register.jpg")
+        img = Image.open("images/register.jpg")
         resized_image = img.resize(size, Image.LANCZOS)
         st.image(resized_image)
     with col5:
@@ -200,7 +243,7 @@ def show_registration_form():
             email = st.text_input(":red[*]:green[Enter your email]")
             full_name = st.text_input(":red[*]:green[Enter full names]")
             user_password = st.text_input(":red[*]:green[Enter your password]", type="password")
-            new_password = hashing_password(user_password)
+            # new_password = hashing_password(user_password)
             if st.form_submit_button("Submit"):
                 field_names = [username, email, username, full_name, user_password
                                ]
@@ -208,7 +251,7 @@ def show_registration_form():
                         validate_password(user_password) and \
                         validate_email(email):
                     if check_duplicate_registrations(username, email):
-                        save_credentials_to_database(username, email, full_name, new_password)
+                        save_credentials_to_database(username, email, full_name, user_password)
                         st.success(":green[successfully registered]")
                         st.session_state.show_register = False
                         st.rerun()
@@ -225,18 +268,18 @@ def login():
     col6, col7 = st.columns(2)
     with col6:
         size = (750, 350)
-        img = Image.open("static/register2.jpg")
+        img = Image.open("images/register2.jpg")
         resized_image = img.resize(size, Image.LANCZOS)
         st.image(resized_image)
 
     with col7:
         login_username = st.text_input(":green[Enter Username]")
         password = st.text_input(":green[Enter Password]", type="password")
-        login_password = hashing_password(password)
+        # login_password = hashing_password(password)
         if st.button("Submit your details"):
             database_password = get_logins(login_username)
             if login_username and password:
-                if database_password == login_password:
+                if database_password and bcrypt.checkpw(password.encode("utf-8"), database_password):
                     save_login_data(login_username)
                     get_user_name(login_username)
                     st.success("Login success")
@@ -264,7 +307,7 @@ def reset_password():
     col8, col9 = st.columns(2)
     with col8:
         size = (800, 300)
-        img = Image.open("static/image.png")
+        img = Image.open("images/image.png")
         new_image = img.resize(size, Image.LANCZOS)
         st.image(new_image)
     with col9:
@@ -272,10 +315,10 @@ def reset_password():
             st.write(":green[reset your password here]")
             user_name = st.text_input(":green[Enter your username to reset password]")
             password = st.text_input(":green[Enter a new password]", type="password")
-            new_password = hashing_password(password)
+            # new_password = hashing_password(password)
             if st.form_submit_button("reset_password"):
                 if user_name and password:
-                    if update_password(new_password, user_name):
+                    if update_password(password, user_name):
                         if validate_password(password):
                             st.success("Password reset was successful")
                             st.session_state.reset_password = False
@@ -300,6 +343,11 @@ def page_appearance():
 
 
 page_appearance()
+
+if "user_currency" not in st.session_state:
+    st.session_state.user_currency = 0
+if "USD" not in st.session_state:
+    st.session_state.USD = 0
 
 
 def logged_in():
@@ -338,10 +386,19 @@ def logged_in():
     else:
         new_username = cookies["user_name"]
         if new_username:
-            my_cursor.execute("select full_names, email from user_details where username=%s", (new_username,))
-            results = my_cursor.fetchall()
+            db = client["Transcription"]
+            user_collection = db["user_registration"]
+
+            # Find the user by username
+            results = user_collection.find_one({"username": new_username}, {"full_names": 1, "email": 1, "_id": 0})
+
             if results:
-                list_details = results[0]
+                # Create list_details from the result
+                list_details = {
+                    "full_names": results["full_names"],
+                    "email": results["email"]
+                }
+
                 # USER PROFILE DETAILS
                 with st.expander("See your profile details"):
                     st.markdown(
@@ -356,22 +413,24 @@ def logged_in():
                             <h3 style="text-align: center; color: #007BFF;">Profile Details</h3>
                             <p style="text-align: left;">
                                 <strong>Username:</strong> {new_username} &emsp;&emsp;
-                                <strong>Full Names:</strong> {list_details[0]} &emsp;&emsp;
-                                <strong>Email:</strong> {list_details[1]}
+                                <strong>Full Names:</strong> {list_details["full_names"]} &emsp;&emsp;
+                                <strong>Email:</strong> {list_details["email"]}
                             </p>
                         </div>
                         """,
                         unsafe_allow_html=True
                     )
-                
+
                 col1, col2, col3, col4 = st.columns([2, 0.5, 1, 2])
                 main_balance = f"ksh. {350}"
-                my_cursor.execute("select balance from user_details where username=%s",(new_username, ))
-                results = my_cursor.fetchone()
-                if results is not None:
-                    kenyan_currency = results[0]
-                    USD = round(kenyan_currency / 127, 2)
-                    
+                db = client["Transcription"]
+                db_collection = db["user_registration"]
+
+                results = db_collection.find_one({"username": new_username}, {"amount": 1, "_id": 0})
+                if results:
+                    st.session_state.user_currency = results['amount']
+                    st.session_state.USD = round(st.session_state.user_currency / 127, 2)
+
                 else:
                     main_balance = "ksh. 0.00"
                 with col1:
@@ -380,10 +439,9 @@ def logged_in():
                     currency = st.selectbox("Select currency", ["KSH", "USD"])
                 with col4:
                     if currency == "KSH":
-                         st.subheader(f":green[you balance: ksh. {kenyan_currency}]")
+                        st.subheader(f":green[you balance: ksh. {st.session_state.user_currency}]")
                     else:
-                        st.subheader(f":green[you balance: ${USD}]")
-                        
+                        st.subheader(f":green[you balance: ${st.session_state.USD}]")
 
                 st.markdown(
                     f"""
@@ -399,14 +457,17 @@ def logged_in():
                 )
                 st.markdown("### leave your comment or recomendation here:")
                 # USER COMMENTS
-                comment = st.text_area("", placeholder="Write your comment, press control enter and then press add comment button that will appear below.")
+                comment = st.text_area("",
+                                       placeholder="Write your comment, press control enter and then press add comment button that will appear below.")
                 st.subheader("User comments and recomendations are available here.")
                 with open("user_comments.json", "r") as file:
                     data = json.load(file)
-                
+
                 if comment:
-                    my_cursor.execute("select full_names from user_details where username=%s", (new_username, ))
-                    results = my_cursor.fetchone()[0]
+                    db = client["Transcription"]
+                    db_collection = db["user_registration"]
+                    results_mg = db_collection.find_one({"username": new_username}, {"full_names": 1, "_id": 0})
+                    results = results_mg["full_names"]
                     if st.button("add_comment"):
                         names = [name['full_name'] for name in data["user_views"]]
                         if results in names:
@@ -414,8 +475,8 @@ def logged_in():
                         else:
                             data["user_views"].append({"full_name": results, "comment": comment})
                             with open("user_comments.json", "w") as file2:
-                                json.dump(data, file2, indent=4)  
-                        comment = ""                                  
+                                json.dump(data, file2, indent=4)
+                        comment = ""
                 with st.expander("View comments"):
                     for index, data in enumerate(data["user_views"]):
                         st.markdown(f"""
@@ -424,10 +485,10 @@ def logged_in():
                                         <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{data['comment']}<p>
                                     </div>
                                     
-                                    """, unsafe_allow_html=True)  
-                                    
-                   
-                    
+                                    """, unsafe_allow_html=True)
+
+
+
         else:
             st.error("no username", new_username)
         this_username = cookies["user_name"]
@@ -440,7 +501,8 @@ def logged_in():
             cookies["is_logged_in"] = "False"
             cookies["user_name"] = ""
             cookies.save()
-            st.experimental_rerun()
+            st.rerun()
+
 
 
 if __name__ == "__main__":
