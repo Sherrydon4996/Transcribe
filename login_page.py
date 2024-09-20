@@ -8,9 +8,6 @@ from pymongo import MongoClient
 import bcrypt
 from datetime import datetime
 
-load_dotenv()
-password = os.getenv("PASSWORD")
-
 st.set_page_config(
     page_title="@HarryProTranscribe",
     page_icon="🎙️",
@@ -21,7 +18,7 @@ st.set_page_config(
 from validate_credentials import validate_email, hashing_password, empty_fields_alert, validate_password
 from home_page import recall_functions
 
-string_word = os.environ.get("STRING_WORD")
+string_word ="mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
 client = MongoClient(string_word)
 
 
