@@ -6,11 +6,12 @@ import subprocess
 import os
 from language_translate import return_translated_text
 from pymongo import MongoClient
+import ssl
 
-password = os.getenv("PASSWORD")
+
 
 string_word = os.environ.get("STRING_WORD")
-client = MongoClient(string_word)
+client = MongoClient(string_word, ssl=True, ssl_cert_reqs=ssl.CERT_NONE, tlsAllowInvalidCertificates=True)
 db = client["Transcription"]
 db_collection = db["user_registration"]
 
