@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import bcrypt
 from datetime import datetime
-import ssl
+import SSL
+from pymongo.server_api import ServerApi
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
@@ -20,7 +21,12 @@ from validate_credentials import validate_email, hashing_password, empty_fields_
 from home_page import recall_functions
 
 string_word ="mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-client = MongoClient(string_word, ssl=True, ssl_cert_reqs=ssl.CERT_NONE, tlsAllowInvalidCertificates=True)
+client = MongoClient(
+    string_word,
+    tls=True,
+    tlsAllowInvalidCertificates=True,
+    server_api=ServerApi('1')
+)
 
 
 def database_table_structure():
