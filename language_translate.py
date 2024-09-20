@@ -6,10 +6,16 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import logging
 import ssl
+from pymongo.server_api import ServerApi
 
 
 string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-client = MongoClient(string_word, ssl=True, ssl_cert_reqs=ssl.CERT_NONE, tlsAllowInvalidCertificates=True)
+client = MongoClient(
+    string_word,
+    tls=True,
+    tlsAllowInvalidCertificates=True,
+    server_api=ServerApi('1')
+)
 db = client["Transcription"]
 
 
