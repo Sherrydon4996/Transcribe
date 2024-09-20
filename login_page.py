@@ -7,7 +7,22 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import bcrypt
 from datetime import datetime
-from pymongo.server_api import ServerApi
+
+import ssl
+
+string_word ="mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+# Create SSL context to enforce TLS 1.2
+ssl_context = ssl.create_default_context()
+ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2  # Enforce TLS 1.2 or later
+
+client = MongoClient(
+    string_word,
+    ssl=True,
+    ssl_cert_reqs=ssl.CERT_REQUIRED,  # Ensure certificates are validated
+    tls=True,
+    ssl_context=ssl_context
+)
+
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
@@ -19,13 +34,8 @@ st.set_page_config(
 from validate_credentials import validate_email, hashing_password, empty_fields_alert, validate_password
 from home_page import recall_functions
 
-string_word ="mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-client = MongoClient(
-    string_word,
-    tls=True,
-    tlsAllowInvalidCertificates=True,
-    server_api=ServerApi('1')
-)
+
+
 
 
 def database_table_structure():
