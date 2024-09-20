@@ -15,6 +15,7 @@ import io
 from moviepy.editor import VideoFileClip
 from pymongo import MongoClient
 from dotenv import load_dotenv
+import ssl
 
 try:
     from english_backend import save_english_transcript
@@ -33,7 +34,7 @@ number_file = random.choice(numbers)
 
 
 string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-client = MongoClient(string_word)
+client = MongoClient(string_word, ssl=True, ssl_cert_reqs=ssl.CERT_NONE, tlsAllowInvalidCertificates=True)
 db = client["Transcription"]
 
 
