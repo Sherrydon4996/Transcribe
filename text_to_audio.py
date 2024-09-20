@@ -1,30 +1,21 @@
-import glob
+
 import streamlit as st
 from gtts import gTTS
 import os
-from random import randint
 from PIL import Image
 import tempfile
-import  mysql.connector
+from pymongo import MongoClient
 
+from dotenv import load_dotenv
 
+load_dotenv()
+password = os.getenv("PASSWORD")
 
 # Establish MySQL connection (ensure credentials and database are correct)
-try:
-    password = os.environ.get('PASSWORD')
-except:
-    st.error("Could not retrieve db passwd")
-try:
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password,
-        database="media_files"
-    )
-    
-    my_cursor = connection.cursor()
-except Exception as e:
-    st.warning(f"Database error: {e}")
+string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+client = MongoClient(string_word)
+db = client["Transcription"]
+db_collection = db["user_registration"]
 
 image_size = (1000, 900)
 
@@ -49,13 +40,13 @@ def display_images(image):
     st.image(display_image)
 
 
-def save_audio(text, file_type):
+def save_audio(text, file_type, username):
     file_name = st.text_input("enter file name to save the audio")
     if st.button("Save audio"):
         if file_name:
             try:
                 with st.spinner("Saving audio..."):
-                    return_saved_audio_file(text, file_type, file_name)
+                    return_saved_audio_file(text, file_type, file_name, username)
             except Exception as e:
                 st.error(f"Error: {e}")
                 return None
@@ -63,37 +54,14 @@ def save_audio(text, file_type):
             st.error("Please provide a name for your file")
 
 
-def delete_audio():
-    file_name = st.text_input("enter file name to delete the audio")
-    if st.button("Delete audio"):
-        try:
-            if file_name:
-                my_cursor.execute("select audio_data from t_data where audio_filename=%s", (file_name, ))
-                results = my_cursor.fetchone()
-                if results:
-                    my_cursor.execute("delete from t_data")
-                    connection.commit()
-                    file_path_name = results[0]
-                    os.remove(file_path_name)
-                else:
-                    st.error("No saved audio file")
-            else:
-                st.error("No file name entered")
-        except Exception as e:
-            st.error(f"Error: {e}")
-
-
-def confirm_file():
+def confirm_file(username):
     file = st.text_input("Access your file by name and play.")
     if st.button("play audio"):
         try:
             if file:
-                query = "select audio_data from t_data where audio_filename=%s"
-                values = (file,)
-                my_cursor.execute(query, values)
-                results = my_cursor.fetchone()
+                results = db_collection.find_one({"username": username}, {"audio_filename": 1, "_id": 0})
                 if results:
-                    file_path_name = results[0]
+                    file_path_name = results["audio_filename"]
                     st.audio(file_path_name)
                 else:
                     st.error("No saved audio file")
@@ -104,14 +72,13 @@ def confirm_file():
             st.error(f"Error: {e}")
 
 
-def download_audio_file():
+def download_audio_file(username):
     file = st.text_input("Enter the name of your file to download it.")
     try:
         if file:
-            my_cursor.execute("select audio_data from t_data where audio_filename=%s", (file, ))
-            results = my_cursor.fetchone()
+            results = db_collection.find_one({"username": username}, {"audio_filename": 1, "_id": 0})
             if results:
-                file2 = results[0]
+                file2 = results["audio_filename"]
                 with open(file2, 'rb') as f:
                     st.download_button(
                         label="Download audio file",
@@ -187,18 +154,16 @@ def footer_notes():
     """, unsafe_allow_html=True)
 
 
-def create_and_save_audio(text, ext, file_name):
+def create_and_save_audio(text, ext, file_name, username):
     tts = gTTS(text=text, lang='en')
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f".{ext}")
     tts.save(temp_file.name)
-    query = "INSERT INTO t_data(audio_filename, audio_data) VALUES(%s,%s)"
-    values = (file_name, temp_file.name)
-    my_cursor.execute(query, values)
-    connection.commit()
+    db_collections = db["user_registration"]
+    db_collections.update_one({"username": username}, {"$set": {"audio_filename": temp_file.name}})
 
 
-def return_saved_audio_file(string_file, file_type, file_name):
-    create_and_save_audio(string_file, file_type, file_name)
+def return_saved_audio_file(string_file, file_type, file_name, username):
+    create_and_save_audio(string_file, file_type, file_name, username)
     st.success(f"{file_name} saved to database")
 
 
@@ -233,16 +198,16 @@ def button_style():
     """, unsafe_allow_html=True)
 
 
-def convert_text_to_audio():
+def convert_text_to_audio(username):
     button_style()
     page_header()
     col1, col3, col6 = st.columns([1, 1, 1])
     with col1:
-        display_images("static/13.jpg")
+        display_images("images/13.jpg")
     with col3:
-        display_images("static/12.jpg")
+        display_images("images/12.jpg")
     with col6:
-        display_images("static/13.jpg")
+        display_images("images/13.jpg")
     text = "Choose the extension that you would want your file to end with.."
     banner_text(text)
     file_type = st.selectbox("Choose file format", ["mp3", "wav"])
@@ -259,15 +224,13 @@ def convert_text_to_audio():
 
         text = st.text_area("Add Text and press Ctrl + Enter to continue", height=250)
     if text:
-        col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
-            save_audio(text, file_type)
+            save_audio(text, file_type, username)
         with col2:
-            delete_audio()
+            confirm_file(username)
         with col3:
-            confirm_file()
-        with col4:
-            download_audio_file()
+            download_audio_file(username)
 
 
 if __name__ == "__main__":
