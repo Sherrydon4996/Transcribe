@@ -4,25 +4,15 @@ import random
 import tempfile
 import subprocess
 import os
-import  mysql.connector
 from language_translate import return_translated_text
+from pymongo import MongoClient
 
-try:
-    password = os.environ.get('PASSWORD')
-except:
-    st.error("Could not retrieve db passwd")
+password = os.getenv("PASSWORD")
 
-try:
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password,
-        database="media_files"
-    )
-    
-    my_cursor = connection.cursor()
-except Exception as e:
-    st.warning(f"Database error: {e}")
+string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+client = MongoClient(string_word)
+db = client["Transcription"]
+db_collection = db["user_registration"]
 
 file_name = [i for i in range(50)]
 choice = random.choice(file_name)
@@ -84,52 +74,23 @@ def video_upload_file():
 
 def create_srt_file(sentences, user_target_language, user_name):
     if sentences is not None:
-        # try:
-        #     my_cursor.execute("update user_details set srt_file = NULL where username=%s", (user_name))
-        #     connection.commit()
-        # except:
-        #     return
         srt_data_file = ""
-        srt_file = "clean_srt_file"
         for i, sentence in enumerate(sentences):
             start_time = convert_ms_to_srt_format(sentence['start'])
             end_time = convert_ms_to_srt_format(sentence['end'])
             text = return_translated_text(sentence["text"], user_target_language)
             # text = sentence['text']
             srt_data_file += f"{i + 1}\n{start_time} --> {end_time}\n{text}\n\n"
-        my_cursor.execute("update user_details set srt_file=%s where username=%s", (user_name, ))
-        connection.commit()
+        db_collection.update_one({"username": user_name}, {"$set": {"srt_file": srt_data_file}})
+        st.success("srt file saved successfully")
 
-        # st.success(f"SRT file created: {srt_filename}")
-
-        # st.markdown(
-        #     """
-        #         <style>
-        #         .banner { background-color: #4CAF50; color: white; padding: 10px;border-radius: 5px;text-align: center;font-family: 'Arial', sans-serif; margin-top: 20px;
-        #         }
-        #         </style>
-        #         <div class="banner">
-        #             <h4>You can download the SRT file and add it manually to your video. It's easier and takes seconds.</h4>
-        #         </div>
-        #         """,
-        #     unsafe_allow_html=True
-        # )
-        # st.markdown("<br>", unsafe_allow_html=True)
-        #
-        # with open(srt_filename, "r") as file:
-        #     st.download_button(
-        #         label="Download srt file",
-        #         data=file,
-        #         file_name=f"{choice}.srt",
-        #         mime="application/x-subrip")
 
 
 def retrieve_srt_file_from_database(user_name):
     try:
-        my_cursor.execute("select srt_file from user_details where username=%s",(user_name))
-        results = my_cursor.fetchone()
+        results = db_collection.find_one({"username": user_name}, {"srt_file": 1, "_id": 0})
         if results is not None:
-            srt_file = results[0]
+            srt_file = results["srt_file"]
             with tempfile.NamedTemporaryFile(delete=False, suffix=".srt") as temp_srt:
                 temp_srt.write(srt_file.encode('utf-8'))
                 temp_srt_path = temp_srt.name
@@ -241,8 +202,7 @@ def call_subtitle_functions(json_file, username):
             else:
                 st.error("There is no transcribed file. Please upload and transcribe a file")
     with col4:
-        image = Image.open("static/sub.webp")
-        st.image(image)
+        st.image("images/sub.webp")
 
 
 if __name__ == "__main__":
