@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import bcrypt
 from datetime import datetime
+import ssl
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
