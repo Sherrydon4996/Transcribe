@@ -5,16 +5,23 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 import logging
-from pymongo.server_api import ServerApi
 
 
-string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+import ssl
+
+
+# Create SSL context to enforce TLS 1.2
+ssl_context = ssl.create_default_context()
+ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2  # Enforce TLS 1.2 or later
+
 client = MongoClient(
     string_word,
+    ssl=True,
+    ssl_cert_reqs=ssl.CERT_REQUIRED,  # Ensure certificates are validated
     tls=True,
-    tlsAllowInvalidCertificates=True,
-    server_api=ServerApi('1')
+    ssl_context=ssl_context
 )
+
 db = client["Transcription"]
 
 
