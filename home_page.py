@@ -8,13 +8,14 @@ import glob
 from pathlib import Path
 import pandas as pd
 import random
-import mysql.connector
+import MySQLdb
 from streamlit_option_menu import option_menu
 from pydub import AudioSegment
 import speech_recognition as sr
 import io
 from moviepy.editor import VideoFileClip
-
+from pymongo import MongoClient
+from dotenv import load_dotenv
 
 try:
     from english_backend import save_english_transcript
@@ -31,22 +32,12 @@ except:
 numbers = [number for number in range(300)]
 number_file = random.choice(numbers)
 
-try:
-    password = os.environ.get('PASSWORD')
-except:
-    st.error("Could not retrieve db passwd")
+load_dotenv()
+password = os.getenv("PASSWORD")
 
-try:
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password,
-        database="media_files"
-    )
-    
-    my_cursor = connection.cursor()
-except Exception as e:
-    st.warning(f"Database error: {e}")
+string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+client = MongoClient(string_word)
+db = client["Transcription"]
 
 
 def web_app_appearance():
@@ -83,12 +74,12 @@ def microphone_icon_appearance():
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col1:
         image_size = (800, 600)
-        img = Image.open("static/microphone.jpeg")
+        img = Image.open("images/microphone.jpeg")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
     with col2:
         image_size = (700, 350)
-        img = Image.open("static/transcribe.webp")
+        img = Image.open("images/transcribe.webp")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
         st.markdown("""
@@ -103,7 +94,7 @@ def microphone_icon_appearance():
 
     with col3:
         image_size = (800, 600)
-        img = Image.open("static/microphone.jpeg")
+        img = Image.open("images/microphone.jpeg")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
 
@@ -145,7 +136,7 @@ def remove_audio_files(directory, extensions=("*.mp3", "*.wav")):
 
 def english_transcription():
     button_styling()
-    english_icon = Image.open("static/English.png")
+    english_icon = Image.open("images/English.png")
     new_icon_size = (650, 400)
     english_image = english_icon.resize(new_icon_size, Image.LANCZOS)
     # if st.button("Transcribe English"):
@@ -220,6 +211,8 @@ def process_english_audio_files(audio_bytes_file, english_uploaded_audio):
         return uploaded_file, file_format
     else:
         st.warning("No audio available to transcribe")
+
+
 def transcription_banner():
     st.markdown(
         """
@@ -235,8 +228,10 @@ def transcription_banner():
         """,
         unsafe_allow_html=True
     )
+
+
 def pricing_plans():
-     st.markdown("""
+    st.markdown("""
         <style>
         .pricing-container {
             display: flex;
@@ -307,9 +302,18 @@ def pricing_plans():
         """, unsafe_allow_html=True)
 
 
+if "amount_silver" not in st.session_state:
+    st.session_state.amount_silver = 0
+
+if "amount_gold" not in st.session_state:
+    st.session_state.amount_gold = 0
+if "amount_swahili" not in st.session_state:
+    st.session_state.amount_swahili = 0
+
+
 def economy_transcription_plan(login_username):
     st.markdown(
-    """
+        """
     <div style="background-color: #2C3E50; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
         <h2 style="color: #ECF0F1; text-align: center;">Unlock the Power of Readable Transcriptions</h2>
         <p style="color: #BDC3C7; font-size: 18px; text-align: center; line-height: 1.6;">
@@ -325,12 +329,12 @@ def economy_transcription_plan(login_username):
         </p>
     </div>
     """,
-    unsafe_allow_html=True)
-    
+        unsafe_allow_html=True)
+
     uploaded_file = st.file_uploader("Choose an audio or video file", type=["mp3", "wav", "ogg", "mp4", "avi", "mov"])
     if uploaded_file is not None:
         file_extension = uploaded_file.name.split(".")[-1].lower()
-        
+
         with tempfile.NamedTemporaryFile(delete=False, suffix=f".{file_extension}") as temp_file:
             temp_file.write(uploaded_file.read())
             temp_file_path = temp_file.name
@@ -348,19 +352,19 @@ def economy_transcription_plan(login_username):
         # Convert to WAV if not already
         if st.button("start_transcribing"):
             with st.spinner("Processing and transcribing..."):
-           
+
                 audio = AudioSegment.from_file(audio_path)
                 duration = audio.duration_seconds
                 minutes, duration = divmod(duration, 60)
                 time_needed = (int(duration) + (60 * int(minutes))) / 12
                 total_amount = round(time_needed * 0.6, 2)
-                my_cursor.execute("select balance from user_details where username=%s", (login_username, ))
-                amount = my_cursor.fetchone()
-                balance = None
+                db_collections = db["user_registration"]
+                results = db_collections.find_one({"username": login_username}, {"amount": 1, "_id": 0})
+                amount = results["amount"]
                 if amount:
-                    balance = amount[0]
+                    st.session_state.amount_silver = amount
 
-                if balance >= total_amount:
+                if st.session_state.amount_silver >= total_amount:
                     wav_path = audio_path.rsplit(".", 1)[0] + ".wav"
                     audio.export(wav_path, format="wav")
 
@@ -371,9 +375,10 @@ def economy_transcription_plan(login_username):
                     try:
                         text = recognizer.recognize_google(audio)
                         st.text_area("Transcribed text", text, height=300)
-                        my_cursor.execute("update user_details set balance = balance - %s where username=%s", (total_amount, login_username))
-                        connection.commit()
-                        st.success(f"You audio file has been successfully transcribed. total amount deducted: ksh. {total_amount}")
+                        db_balance = db["user_registration"]
+                        db_balance.update_one({"username": login_username}, {"$inc": {"amount": - total_amount}})
+                        st.success(
+                            f"You audio file has been successfully transcribed. total amount deducted: ksh. {total_amount}")
                     except sr.UnknownValueError:
                         return "Google Speech Recognition could not understand the audio"
                     except sr.RequestError:
@@ -381,7 +386,6 @@ def economy_transcription_plan(login_username):
                 else:
                     st.warning("Oops! insufficient balance! Please contact 0711140899 for recharge.")
 
-                               
 
 def load_english_files(login_username):
     english_transcription()
@@ -413,32 +417,32 @@ def load_english_files(login_username):
                     minutes, duration = divmod(duration, 60)
                     time_needed = (int(duration) + (60 * int(minutes))) / 12
                     total_amount = round(time_needed * 2, 2)
-                    my_cursor.execute("select balance from user_details where username=%s", (login_username, ))
-                    amount = my_cursor.fetchone()
-                    balance = None
-                    if amount:
-                        balance = amount[0]
+                    db_collections = db["user_registration"]
+                    results = db_collections.find_one({"username": login_username}, {"amount": 1, "_id": 0})
+                    if results:
+                        st.session_state.amount_gold = results["amount"]
 
-                    if balance >= total_amount:
+                    if st.session_state.amount_gold >= total_amount:
                         json_data, error = save_english_transcript(temp_audio_path, file_extension)
                         try:
                             # my_cursor.execute("update user_details set json_files= NULL where username=%s", (login_username, ))
-                            my_cursor.execute("update user_details set balance = balance - %s where username=%s", (total_amount, login_username))
-                            connection.commit()
+                            db_collection = db["user_registration"]
+                            db_collections.update_one({"username": login_username}, {"$inc": {"amount": -total_amount}})
                         except:
                             st.error("Database error: error removing file from database")
                         if error:
                             st.warning(f"error: {error}")
                         else:
                             transcribed_text = json_data['text']
-                            st.success(f"You audio file has been successfully transcribed. total amount deducted: ksh. {total_amount}")
+                            st.success(
+                                f"You audio file has been successfully transcribed. total amount deducted: ksh. {total_amount}")
                             remove_audio_files("./")
                             text_data = st.text_area("Transcribed data", transcribed_text, height=400)
                             st.balloons()
                             st.info(f"Your total transcribed words are: {len(text_data.split())}")
                             if len(text_data.split()) > 100:
                                 st.warning("")
-                                    
+
                             if english_uploaded_audio is not None:
                                 document_names = ["data", "notes", "summary", "draft", "content", "info", "textfile",
                                                   "description",
@@ -464,10 +468,9 @@ def load_english_files(login_username):
                                 )
 
                             json_datafile = json.dumps(json_data)
-                            json_filename = "json_file"
-
-                            my_cursor.execute("update user_details set json_files=%s where username=%s",(json_datafile, login_username))
-                            connection.commit()
+                            db_collections = db["user_registration"]
+                            db_collections.update_one({"username": login_username},
+                                                      {"$set": {"json_file": json_datafile}})
                             st.success("json file saved to database")
                     else:
                         minutes, duration = divmod(duration, 60)
@@ -479,7 +482,7 @@ def load_english_files(login_username):
 
 def swahili_transcription():
     button_styling()
-    swahili_icon = Image.open("static/swahili.webp")
+    swahili_icon = Image.open("images/swahili.webp")
     swahili_icon_size = (650, 400)
     swahili_image = swahili_icon.resize(swahili_icon_size, Image.LANCZOS)
     col7, col8, col9 = st.columns([1, 1, 1])
@@ -553,17 +556,15 @@ def load_swahili_files(login_username):
                     minutes, duration = divmod(duration, 60)
                     time_needed = (int(duration) + (60 * int(minutes))) / 12
                     total_amount = round(time_needed * 2, 2)
-                    my_cursor.execute("select balance from user_details where username=%s", (login_username, ))
-                    amount = my_cursor.fetchone()
-                    balance = None
-                    if amount:
-                        balance = amount[0]
+                    db_collections = db["user_registration"]
+                    results = db_collections.find_one({"username": login_username}, {"amount": 1, "_id": 0})
+                    if results:
+                        st.session_state.amount_swahili = results["amount"]
 
-                    if balance >= total_amount:
+                    if st.session_state.amount_swahili >= total_amount:
                         data, error = save_transcript_swahili(temp_audio_path, file_extension)
-                        my_cursor.execute("delete from text_files where json_filename=%s", ("json_file",))
-                        my_cursor.execute("update user_details set balance = balance - %s where username=%s", (total_amount, login_username))
-                        connection.commit()
+                        db_collections = db["user_registration"]
+                        db_collections.update_one({"username": login_username}, {"$inc": {"amount": - total_amount}})
                         if error:
                             st.warning(f"error: {error}")
                         else:
@@ -601,7 +602,8 @@ def load_swahili_files(login_username):
                                     mime="text/plain"
 
                                 )
-                            st.warning("Note: swahili files are not saved in database, therefor not accessible for video subtitles")
+                            st.warning(
+                                "Note: swahili files are not saved in database, therefor not accessible for video subtitles")
                     else:
                         minutes, duration = divmod(duration, 60)
                         st.error("insufficient balance, contact admin")
@@ -627,7 +629,6 @@ def session_state(options_menu_bar, user_name):
         st.session_state.swahili_transcription = False
     if "free_plan" not in st.session_state:
         st.session_state.free_plan = False
-
 
     if options_menu_bar == "English_Swahili Transcription":
         button_styling()
@@ -658,57 +659,61 @@ def session_state(options_menu_bar, user_name):
 
 
 def manage_users(username):
-    # user_name = st.text_input("Enter admins username and press enter to gain access")
+    db_collections = db["user_registration"]
+    db_login_history = db["login_info"]
     if username:
         if username == "harry_transcriber":
-            my_cursor.execute("select * from user_details")
-            results = my_cursor.fetchall()
-            with st.expander("user registration details"):
+            # Fetch all user details
+            results = list(db_collections.find({}, {"_id": 0}))  # Exclude MongoDB's internal _id field
+            with st.expander("User registration details"):
                 if results:
-                    df = pd.DataFrame(results, columns=["id", "username", "email", "full_names", "amount", "json_filename", "srt_file", "password", "time"])
-                    df.reset_index(drop=True, inplace=True)
+                    # Convert MongoDB results to DataFrame for display
+                    df = pd.DataFrame(results)
                     st.dataframe(df)
-                    selected_user = st.selectbox("Select user", results)
-                    user_name_selected = (selected_user[1])
-                    if user_name_selected:
+
+                    # Select a user from the list
+                    selected_user = st.selectbox("Select user", df["username"])
+
+                    if selected_user:
+                        # Handle user deletion
                         if st.button("Delete user"):
-                            my_cursor.execute("delete from user_details where username=%s", (user_name_selected,))
-                            connection.commit()
-                            st.success("User has been deleted successfully")
+                            db_collections.delete_one({"username": selected_user})
+                            st.success(f"User '{selected_user}' has been deleted successfully")
                 else:
-                    st.info("no registration details yet")
+                    st.info("No registration details yet")
+
             with st.expander("User amount"):
-                selected_user = st.selectbox("Select user to add amount", results)
-                if selected_user:
-                    user_name_selected = (selected_user[1])
-                    sign = st.selectbox("select sign", ["+","-"])
+                if results:
+                    selected_user = st.selectbox("Select user to add amount", df["username"])
+                    sign = st.selectbox("Select sign", ["+", "-"])
                     amount = st.number_input("Enter amount", min_value=0)
-                    if user_name_selected:
-                        if st.button("press to + or - amount"):
+
+                    if selected_user:
+                        if st.button("Press to + or - amount"):
                             if amount > 9:
-                                my_cursor.execute(f"update user_details set balance= balance {sign} %s where username=%s", ( amount, user_name_selected))
-                                connection.commit()
-                                if sign == "+":
-                                    st.success(f"{amount} was added to the user user successfully")
-                                else:
-                                    st.success(f" {amount} was deducted from the user successfully")
+                                # Handle increment or decrement of user's balance
+                                update_operator = "$inc" if sign == "+" else "$dec"
+                                db_collections.update_one({"username": selected_user},
+                                                          {update_operator: {"amount": amount}})
+
+                                action = "added to" if sign == "+" else "deducted from"
+                                st.success(f"{amount} was {action} the user's account successfully")
                             else:
-                                st.error("Kindly enter the amount you want to pass to the user")
+                                st.error("Kindly enter an amount greater than 9")
                 else:
                     st.error("No users to add amount!")
 
-            with st.expander("all users login history"):
-                my_cursor.execute("select * from login_info")
-                results = my_cursor.fetchall()
-                if results:
-                    df = pd.DataFrame(results, columns=["id", "username", "full_names", "time"])
-                    df.reset_index(drop=True, inplace=True)
-                    st.dataframe(df)
-                    if st.button("Clear history"):
-                        my_cursor.execute("delete from login_info")
-                        connection.commit()
-                        st.success("User has been deleted successfully")
+            with st.expander("All users' login history"):
+                login_results = list(db_login_history.find({}, {"_id": 0}))
+                if login_results:
+                    # Convert login history to DataFrame
+                    login_df = pd.DataFrame(login_results)
+                    st.dataframe(login_df)
 
+                    # Option to clear login history
+                    if st.button("Clear history"):
+                        db_login_history.delete_many({})
+                        st.success("Login history cleared successfully")
                 else:
                     st.info("No login info yet")
         else:
@@ -717,13 +722,16 @@ def manage_users(username):
         st.info("Access key is admin username.")
 
 
+
+
+
 def expanded_menu_bar(options_menu_bar, json_file, username):
     if options_menu_bar == "text_analysis":
         call_functions(json_file)
     elif options_menu_bar == "Text to audio files":
-        convert_text_to_audio()
+        convert_text_to_audio(username)
     elif options_menu_bar == "Detect and translate language":
-        translate_language()
+        translate_language(username)
     elif options_menu_bar == "add_video_subtitles":
         call_subtitle_functions(json_file, username)
     elif options_menu_bar == "admins_page":
