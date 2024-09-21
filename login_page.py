@@ -248,11 +248,11 @@ def logged_in():
     if not st.session_state.is_logged_in:
         register_message = "Not registered yet? Join us today and start transcribing with ease enjoying cheap and affordable transcription service <b style='color:black;'> @ ksh. 6/per audio minute </b> with 2 free minutes and other free services like text analysis and multiple translation languages available!</b>"
         register_css = f"""
-            <div style="width:100%; position:relative; min-height:200px; background-color:#1F618D; padding:20px; border-radius:8px; 
+            <div style="width:100%; position:relative; min-height:100px; background-color:#1F618D; padding:20px; border-radius:8px; 
                         text-align:center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); justify-content: space-between; align-items: center;">
-                <p style="color:gold; font-size:16px; font-weight:500; position:absolute; margin: 0; left:0%; ">Create an account</p>
-                <p style="color:#F7F9F9; position:absolute; font-size:16px; font-weight:500; left:10%; right:10%; margin: 0;">{register_message}</p>
-                <p style="color:gold; font-size:16px; position:absolute; font-weight:500; margin: 0; right:0%;">Login</p>
+                <p style="color:gold; font-size:16px; font-weight:500; position:absolute; margin: 0; left:2%; ">Create an account</p>
+                <p style="color:#F7F9F9; position:absolute; font-size:16px; font-weight:500; left:15%; right:10%; margin: 0;">{register_message}</p>
+                <p style="color:gold; font-size:16px; position:absolute; font-weight:500; margin: 0; right:2%;">Login</p>
             </div>
         """
         st.markdown(register_css, unsafe_allow_html=True)
