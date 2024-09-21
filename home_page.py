@@ -68,7 +68,7 @@ def microphone_icon_appearance():
         st.image(resized_image)
         st.markdown("""
                 <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 36px; color: #333; margin-top: 10px;">
+                    <div style="font-size: 36px; color: rgba(255,0,0,0.6); font-weight:bolder; margin-top: 10px;">
                     <q>Transcribe Today</q>
                     </div>
                 </div>
