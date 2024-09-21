@@ -5,6 +5,15 @@ import os
 from sqlite_db import get_json_from_database
 
 
+if "results" not in st.session_state:
+    st.session_state.results = ""
+if 'data_text' not in st.session_state:
+    st.session_state.data_text = ""
+if 'uploaded' not in st.session_state:
+    st.session_state.uploaded = ""
+if 'translated_text' not in st.session_state:
+    st.session_state.translated_text = ""
+
 def detect_language(text):
     detected_language = Translator()
     detection = detected_language.detect(text)
@@ -18,14 +27,6 @@ def return_translated_text(text, target_language):
     return translation.text
 
 
-if "results" not in st.session_state:
-    st.session_state.results = ""
-if 'data_text' not in st.session_state:
-    st.session_state.data_text = ""
-if 'uploaded' not in st.session_state:
-    st.session_state.uploaded = ""
-if 'translated_text' not in st.session_state:
-    st.session_state.translated_text = ""
 
 # Function to select language
 def select_language():
