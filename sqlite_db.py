@@ -6,7 +6,7 @@ import streamlit as st
 
 
 def create_database():
-    connection = sqlite3.connect('harry_data.db')
+    connection = sqlite3.connect('transcribed_data.db')
     cursor = connection.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS user_details (
@@ -42,7 +42,7 @@ create_database()
 
 def check_duplicate_username_or_email(username, email):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM user_details WHERE username=? OR email=?", (username, email))
         result = cursor.fetchone()
@@ -57,7 +57,7 @@ def check_duplicate_username_or_email(username, email):
 
 def save_credentials_to_database(full_name, username, email, new_password):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         hashed_password = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
         current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
@@ -74,7 +74,7 @@ def save_credentials_to_database(full_name, username, email, new_password):
 
 def get_logins(username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("select password from user_details where username=?", (username,))
         result = cursor.fetchone()
@@ -87,7 +87,7 @@ def get_logins(username):
 
 def update_password(new_password, username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
         cursor.execute("update user_details set password=? where username=?", (hashed_password, username))
@@ -100,7 +100,7 @@ def update_password(new_password, username):
 
 def check_duplicate_registrations(username, email):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM user_details WHERE username=? OR email=?", (username, email))
         results = cursor.fetchall()
@@ -114,7 +114,7 @@ def check_duplicate_registrations(username, email):
 
 def save_login_history(username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("select full_name, username, email, current_time, amount from user_details where username=?",
                        (username,))
@@ -130,7 +130,7 @@ def save_login_history(username):
 
 def get_full_name(username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("SELECT full_name, email FROM user_details WHERE username=?", (username,))
         results = cursor.fetchone()
@@ -146,7 +146,7 @@ def get_full_name(username):
 
 def get_user_balance(username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("select amount from user_details where username=?", (username,))
         results = cursor.fetchone()
@@ -159,7 +159,7 @@ def get_user_balance(username):
 
 def update_balance(sign, amount, username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute(f"update user_details set amount = amount {sign} ? where username= ?", (amount, username))
         connection.commit()
@@ -170,7 +170,7 @@ def update_balance(sign, amount, username):
 
 def save_json_file(json_file, username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("update user_details set json_file=? where username=?", (json_file, username))
         connection.commit()
@@ -181,7 +181,7 @@ def save_json_file(json_file, username):
 
 def get_all_user_details():
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("select * from user_details")
         results = cursor.fetchall()
@@ -194,7 +194,7 @@ def get_all_user_details():
 
 def get_login_history():
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("select * from login_info")
         results = cursor.fetchall()
@@ -207,7 +207,7 @@ def get_login_history():
 
 def delete_user(username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("delete from user_details where username=?", (username,))
         connection.commit()
@@ -218,7 +218,7 @@ def delete_user(username):
 
 def clear_login_history():
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("delete from login_info")
         connection.commit()
@@ -229,7 +229,7 @@ def clear_login_history():
 
 def get_json_from_database(username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("select json_file from user_details where username=?", (username,))
         results = cursor.fetchone()
@@ -243,7 +243,7 @@ def get_json_from_database(username):
 
 def save_audio_filename(audio_file, username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("update user_details set audio_filename=? where username=?", (audio_file, username,))
         connection.commit()
@@ -254,7 +254,7 @@ def save_audio_filename(audio_file, username):
 
 def get_audio_filename(username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("select audio_filename from user_details where username=?", (username,))
         results = cursor.fetchone()
@@ -267,7 +267,7 @@ def get_audio_filename(username):
 
 def save_srt_file(srt_file, username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("update user_details set srt_file=? where username=?", (srt_file, username,))
         connection.commit()
@@ -278,7 +278,7 @@ def save_srt_file(srt_file, username):
 
 def get_srt_file(username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         cursor.execute("select srt_file from user_details where username=?", (username,))
         results = cursor.fetchone()
