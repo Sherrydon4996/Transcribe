@@ -1,7 +1,6 @@
 import streamlit as st
 from googletrans import Translator
 import json
-import os
 from sqlite_db import get_json_from_database
 
 
@@ -60,9 +59,9 @@ def select_language():
 
     col11, col12, col13 = st.columns([3, 1, 3])
     with col11:
-        st.image("static/58.jpg")
+        st.image("images/58.jpg")
     with col13:
-        st.image("static/59.jpg")
+        st.image("images/59.jpg")
     st.subheader(":green[Select and set your target language]")
     with open("languages_value.json", "r") as file5:
         language_list = json.load(file5)
