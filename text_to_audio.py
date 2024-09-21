@@ -1,20 +1,9 @@
-
 import streamlit as st
 from gtts import gTTS
 import os
 from PIL import Image
 import tempfile
-from pymongo import MongoClient
-import ssl
-
-
-
-
-# Establish MySQL connection (ensure credentials and database are correct)
-string_word = os.environ.get("STRING_WORD")
-client = MongoClient(string_word, ssl=True, ssl_cert_reqs=ssl.CERT_NONE, tlsAllowInvalidCertificates=True)
-db = client["Transcription"]
-db_collection = db["user_registration"]
+from sqlite_db import save_audio_filename, get_audio_filename
 
 image_size = (1000, 900)
 
@@ -40,55 +29,44 @@ def display_images(image):
 
 
 def save_audio(text, file_type, username):
-    file_name = st.text_input("enter file name to save the audio")
     if st.button("Save audio"):
-        if file_name:
-            try:
-                with st.spinner("Saving audio..."):
-                    return_saved_audio_file(text, file_type, file_name, username)
-            except Exception as e:
-                st.error(f"Error: {e}")
-                return None
-        else:
-            st.error("Please provide a name for your file")
+        try:
+            with st.spinner("Saving audio..."):
+                return_saved_audio_file(text, file_type, username)
+        except Exception as e:
+            st.error(f"Error: {e}")
+            return None
 
 
 def confirm_file(username):
-    file = st.text_input("Access your file by name and play.")
     if st.button("play audio"):
         try:
-            if file:
-                results = db_collection.find_one({"username": username}, {"audio_filename": 1, "_id": 0})
-                if results:
-                    file_path_name = results["audio_filename"]
-                    st.audio(file_path_name)
-                else:
-                    st.error("No saved audio file")
+            results = get_audio_filename(username)
+            if results:
+                file_path_name = results
+                st.audio(file_path_name)
             else:
-                st.error("Please enter a file_name")
+                st.error("No saved audio file")
 
         except Exception as e:
             st.error(f"Error: {e}")
 
 
 def download_audio_file(username):
-    file = st.text_input("Enter the name of your file to download it.")
     try:
-        if file:
-            results = db_collection.find_one({"username": username}, {"audio_filename": 1, "_id": 0})
-            if results:
-                file2 = results["audio_filename"]
-                with open(file2, 'rb') as f:
-                    st.download_button(
-                        label="Download audio file",
-                        data=f.read(),
-                        file_name=os.path.basename(file2),
-                        mime="audio/mpeg"
-                    )
-            else:
-                st.info("No audio file saved")
+        results = get_audio_filename(username)
+        if results:
+            file2 = results["audio_filename"]
+            with open(file2, 'rb') as f:
+                st.download_button(
+                    label="Download audio file",
+                    data=f.read(),
+                    file_name=os.path.basename(file2),
+                    mime="audio/mpeg"
+                )
         else:
-            st.info("Please enter the name of the file you want to download")
+            st.info("No audio file saved")
+
 
     except Exception as e:
         st.error(f"Error: {e}")
@@ -123,19 +101,19 @@ def banner_text(text):
 
 def footer_notes():
     st.markdown("""
-    <div style="background-color: #aab7b8; padding: 30px; border-top: 2px solid #e9ecef; text-align: center;">
-        <h3 style="font-size: 20px; color: #343a40; margin-bottom: 15px;">Thank You for Using Our Application!</h3>
-        <p style="font-size: 16px; color: #495057; margin-bottom: 20px;">
+    <div style="background-color: rgba(255,0,0,0.3); padding: 30px; border-top: 2px solid #e9ecef; text-align: center;">
+        <h3 style="font-size: 20px; color: white; margin-bottom: 15px;">Thank You for Using Our Application!</h3>
+        <h4 style="font-size: 16px; color: black; margin-bottom: 20px;">
             We hope our tool has helped streamline your workflow. Your feedback is essential to our growth and continued improvement.
-        </p>
+        </h4>
         <div style="margin-bottom: 25px;">
-            <p style="font-size: 14px; color: #6c757d; margin-bottom: 10px;">
+            <h4 style="font-size: 14px; color: black; margin-bottom: 10px;">
                 Have questions or need support? Get in touch with us via email or follow us on social media for the latest updates and support:
-            </p>
+            </h4>
             <p style="font-size: 14px;">
-                <a href="mailto:support@webapp.com" style="color: #007bff; text-decoration: none; margin-right: 15px;">support@webapp.com</a> | 
-                <a href="https://twitter.com/webapp" target="_blank" style="color: #007bff; text-decoration: none; margin-right: 15px;">Twitter</a> | 
-                <a href="https://www.facebook.com/harrison.njogu.94/" target="_blank" style="color: #007bff; text-decoration: none;">Facebook</a>
+                <a href="#" style="color: #007bff; text-decoration: none; margin-right: 15px;">support@webapp.com</a> | 
+                <a href="#" target="_blank" style="color: #007bff; text-decoration: none; margin-right: 15px;">Twitter</a> | 
+                <a href="#" target="_blank" style="color: #007bff; text-decoration: none;">Facebook</a>
             </p>
         </div>
         <hr style="border-top: 1px solid #e9ecef; margin-bottom: 20px;">
@@ -153,17 +131,16 @@ def footer_notes():
     """, unsafe_allow_html=True)
 
 
-def create_and_save_audio(text, ext, file_name, username):
+def create_and_save_audio(text, ext, username):
     tts = gTTS(text=text, lang='en')
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f".{ext}")
     tts.save(temp_file.name)
-    db_collections = db["user_registration"]
-    db_collections.update_one({"username": username}, {"$set": {"audio_filename": temp_file.name}})
+    save_audio_filename(temp_file.name, username)
 
 
-def return_saved_audio_file(string_file, file_type, file_name, username):
-    create_and_save_audio(string_file, file_type, file_name, username)
-    st.success(f"{file_name} saved to database")
+def return_saved_audio_file(string_file, file_type, username):
+    create_and_save_audio(string_file, file_type, username)
+    st.success(f"file saved to database")
 
 
 def upload_file():
@@ -202,11 +179,11 @@ def convert_text_to_audio(username):
     page_header()
     col1, col3, col6 = st.columns([1, 1, 1])
     with col1:
-        display_images("static/13.jpg")
+        display_images("images/13.jpg")
     with col3:
-        display_images("static/12.jpg")
+        display_images("images/12.jpg")
     with col6:
-        display_images("static/13.jpg")
+        display_images("images/13.jpg")
     text = "Choose the extension that you would want your file to end with.."
     banner_text(text)
     file_type = st.selectbox("Choose file format", ["mp3", "wav"])
