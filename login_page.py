@@ -1,28 +1,12 @@
 import streamlit as st
 from streamlit_cookies_manager import EncryptedCookieManager
-import os
 from PIL import Image
 import json
-from dotenv import load_dotenv
-from pymongo import MongoClient
 import bcrypt
-from datetime import datetime
 
-import ssl
-
-string_word ="mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-# Create SSL context to enforce TLS 1.2
-ssl_context = ssl.create_default_context()
-ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2  # Enforce TLS 1.2 or later
-
-client = MongoClient(
-    string_word,
-    ssl=True,
-    ssl_cert_reqs=ssl.CERT_REQUIRED,  # Ensure certificates are validated
-    tls=True,
-    ssl_context=ssl_context
-)
-
+from sqlite_db import (save_credentials_to_database, save_login_history,
+                       get_logins, update_password, get_full_name, get_user_balance,
+                       check_duplicate_registrations)
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
@@ -31,30 +15,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-from validate_credentials import validate_email, hashing_password, empty_fields_alert, validate_password
+from validate_credentials import validate_email, empty_fields_alert, validate_password
 from home_page import recall_functions
-
-
-
-
-
-def database_table_structure():
-    """
-    database_structure
-    {
-    full_names: "",
-    username: "",
-    email: "",
-    amount: 0,
-    audio_filename:"",
-    srt_file:"",
-    json_file:"",
-    password: "",
-    current_time:"",
-    }
-
-    """
-
 
 cookies = EncryptedCookieManager(
     prefix="My_weApp",
@@ -152,100 +114,12 @@ def button_appearance():
     st.markdown(login_button_css, unsafe_allow_html=True)
 
 
-def save_credentials_to_database(username, email, full_names, new_password):
-    # Hash the password
-    hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
-    db = client["Transcription"]
-    user_collection = db["user_registration"]
-
-    # Insert new user into the collection
-    user_document = {
-        "username": username,
-        "email": email,
-        "full_names": full_names,
-        "password": hashed_password,
-        "amount": 10,  # Set initial balance to 10
-        "audio_filename": "",
-        "srt_file": "",
-        "json_file": "",
-        "current_time": datetime.now()  # Store current timestamp
-    }
-
-    # Insert the document into MongoDB
-    user_collection.insert_one(user_document)
-
-
-def get_logins(username):
-    # Connect to MongoDB
-    db = client["Transcription"]
-    user_collection = db["user_registration"]
-
-    # Find the user by username
-    result = user_collection.find_one({"username": username}, {"password": 1, "_id": 0})
-
-    if result:
-        return result["password"]
-    return None
-
-
-def update_password(new_password, username):
-    # Connect to MongoDB
-    db = client["Transcription"]
-    user_collection = db["user_registration"]
-
-    # Check if the user exists
-    result = user_collection.find_one({"username": username})
-    if result:
-        # Hash the new password
-        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
-
-        # Update the password
-        user_collection.update_one({"username": username}, {"$set": {"password": hashed_password}})
-        return True
-    return False
-
-
-def check_duplicate_registrations(username, email):
-    # Connect to MongoDB
-    db = client["Transcription"]
-    user_collection = db["user_registration"]
-
-    # Check for username or email duplication
-    result = user_collection.find_one({"$or": [{"username": username}, {"email": email}]})
-
-    if result:
-        return False  # Duplicate found
-    return True  # No duplicates found
-
-
-def save_login_data(username):
-    # Connect to MongoDB
-    db = client["Transcription"]
-
-    # Collections
-    user_collection = db["user_registration"]
-    login_collection = db["login_info"]
-
-    # Find the user's full name
-    result = user_collection.find_one({"username": username}, {"full_names": 1, "_id": 0})
-    if result:
-        full_names = result["full_names"]
-
-        # Insert login info into a separate collection
-        login_data = {
-            "username": username,
-            "full_names": full_names,
-            "login_time": datetime.now()  # Record login time
-        }
-        login_collection.insert_one(login_data)
-
-
 def show_registration_form():
     st.subheader(":blue[Proceed to login if you already have an account]")
     col4, col5 = st.columns(2)
     with col4:
         size = (800, 450)
-        img = Image.open("static/register.jpg")
+        img = Image.open("images/register.jpg")
         resized_image = img.resize(size, Image.LANCZOS)
         st.image(resized_image)
     with col5:
@@ -260,20 +134,26 @@ def show_registration_form():
             if st.form_submit_button("Submit"):
                 field_names = [username, email, username, full_name, user_password
                                ]
-                if empty_fields_alert(field_names) and \
-                        validate_password(user_password) and \
-                        validate_email(email):
-                    if check_duplicate_registrations(username, email):
-                        save_credentials_to_database(username, email, full_name, user_password)
-                        st.success(":green[successfully registered]")
-                        st.session_state.show_register = False
-                        st.rerun()
+                if empty_fields_alert(field_names):
+                    if validate_password(user_password):
+                        if validate_email(email):
+
+                            if check_duplicate_registrations(username, email):
+                                save_credentials_to_database(full_name, username, email, user_password)
+                                st.success(":green[successfully registered]")
+                                st.session_state.show_register = False
+                                st.rerun()
+
+                            else:
+                                st.error(":red[username or email has already been used to register another account]")
+
+                        else:
+                            st.error(":red[Your email is invalid]")
                     else:
-                        st.error(":red[username or email has already been used to register another account]")
+                        st.error(":red[Password must have 6 or more characters]")
 
                 else:
-                    st.error(
-                        ":red[Make sure there are no empty fields, password = 6 or more characters and email is valid]")
+                    st.error(":red[Make sure there are no empty fields]")
 
 
 def login():
@@ -281,7 +161,7 @@ def login():
     col6, col7 = st.columns(2)
     with col6:
         size = (750, 350)
-        img = Image.open("static/register2.jpg")
+        img = Image.open("images/register2.jpg")
         resized_image = img.resize(size, Image.LANCZOS)
         st.image(resized_image)
 
@@ -293,7 +173,7 @@ def login():
             database_password = get_logins(login_username)
             if login_username and password:
                 if database_password and bcrypt.checkpw(password.encode("utf-8"), database_password):
-                    save_login_data(login_username)
+                    save_login_history(login_username)
                     get_user_name(login_username)
                     st.success("Login success")
                     st.session_state.is_logged_in = True
@@ -320,7 +200,7 @@ def reset_password():
     col8, col9 = st.columns(2)
     with col8:
         size = (800, 300)
-        img = Image.open("static/image.png")
+        img = Image.open("images/image.png")
         new_image = img.resize(size, Image.LANCZOS)
         st.image(new_image)
     with col9:
@@ -349,7 +229,7 @@ def page_appearance():
     st.markdown("""
     <style>
      .stApp{
-      background-color: #2c3e50;
+      background-color: rgba(255,0,0,0.2);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -399,19 +279,8 @@ def logged_in():
     else:
         new_username = cookies["user_name"]
         if new_username:
-            db = client["Transcription"]
-            user_collection = db["user_registration"]
-
-            # Find the user by username
-            results = user_collection.find_one({"username": new_username}, {"full_names": 1, "email": 1, "_id": 0})
-
-            if results:
-                # Create list_details from the result
-                list_details = {
-                    "full_names": results["full_names"],
-                    "email": results["email"]
-                }
-
+            full_name, email = get_full_name(new_username)
+            if full_name and email:
                 # USER PROFILE DETAILS
                 with st.expander("See your profile details"):
                     st.markdown(
@@ -426,8 +295,8 @@ def logged_in():
                             <h3 style="text-align: center; color: #007BFF;">Profile Details</h3>
                             <p style="text-align: left;">
                                 <strong>Username:</strong> {new_username} &emsp;&emsp;
-                                <strong>Full Names:</strong> {list_details["full_names"]} &emsp;&emsp;
-                                <strong>Email:</strong> {list_details["email"]}
+                                <strong>Full Names:</strong> {full_name} &emsp;&emsp;
+                                <strong>Email:</strong> {email}
                             </p>
                         </div>
                         """,
@@ -436,25 +305,23 @@ def logged_in():
 
                 col1, col2, col3, col4 = st.columns([2, 0.5, 1, 2])
                 main_balance = f"ksh. {350}"
-                db = client["Transcription"]
-                db_collection = db["user_registration"]
 
-                results = db_collection.find_one({"username": new_username}, {"amount": 1, "_id": 0})
+                results = get_user_balance(new_username)
                 if results:
-                    st.session_state.user_currency = results['amount']
+                    st.session_state.user_currency = results
                     st.session_state.USD = round(st.session_state.user_currency / 127, 2)
 
                 else:
                     main_balance = "ksh. 0.00"
                 with col1:
-                    st.subheader(f":green[Welcome {new_username.title()}]")
+                    st.subheader(f":red[Welcome {new_username.title()}]")
                 with col2:
                     currency = st.selectbox("Select currency", ["KSH", "USD"])
                 with col4:
                     if currency == "KSH":
-                        st.subheader(f":green[you balance: ksh. {st.session_state.user_currency}]")
+                        st.subheader(f":red[you balance: ksh. {st.session_state.user_currency}]")
                     else:
-                        st.subheader(f":green[you balance: ${st.session_state.USD}]")
+                        st.subheader(f":red[you balance: ${st.session_state.USD}]")
 
                 st.markdown(
                     f"""
@@ -477,10 +344,8 @@ def logged_in():
                     data = json.load(file)
 
                 if comment:
-                    db = client["Transcription"]
-                    db_collection = db["user_registration"]
-                    results_mg = db_collection.find_one({"username": new_username}, {"full_names": 1, "_id": 0})
-                    results = results_mg["full_names"]
+                    full_name, email = get_full_name(new_username)
+                    results = full_name
                     if st.button("add_comment"):
                         names = [name['full_name'] for name in data["user_views"]]
                         if results in names:
@@ -515,7 +380,6 @@ def logged_in():
             cookies["user_name"] = ""
             cookies.save()
             st.rerun()
-
 
 
 if __name__ == "__main__":
