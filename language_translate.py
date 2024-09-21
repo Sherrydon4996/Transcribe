@@ -88,6 +88,7 @@ def translate_language(username):
         json_data = get_json_database(username)
         if json_data is not None:
             st.session_state.data_text = json_data['text']
+            st.write(f"data: {json_data["text"]}")
             st.info("Transcribed data loaded successfully.")
         else:
             st.error("No transcribe file available")
