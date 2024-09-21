@@ -691,7 +691,7 @@ def manage_users(username):
                 login_results = get_login_history()
 
                 if login_results:
-                    login_df = pd.DataFrame(login_results, columns=["id", "name", "username", "email","balance", "login_time"])
+                    login_df = pd.DataFrame(login_results, columns=["id", "name", "username", "email","balance", "login_time + 3hrs"])
                     st.dataframe(login_df)
 
                     if st.button("Clear history"):
