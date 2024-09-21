@@ -27,7 +27,7 @@ try:
     from sqlite_db import (get_user_balance, update_balance,
                            save_json_file, get_all_user_details, get_login_history,
                            delete_user, clear_login_history)
-    from sqlite_db import get_json_from_database
+    from sqlite_db import get_json_database
 except:
     st.info("Unexpected error occurred, try refreshing the page!")
 
@@ -720,7 +720,7 @@ def recall_functions(user_name):
     button_styling()
     menu_bar_options = menu_bar()
     session_state(menu_bar_options, user_name)
-    json_file = get_json_from_database(user_name)
+    json_file = get_json_database(user_name)
     expanded_menu_bar(menu_bar_options, json_file, user_name)
     st.markdown("---")
     st.markdown("© 2024 Audio Transcription App | Developed by @Harry")
