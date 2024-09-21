@@ -246,7 +246,7 @@ if "USD" not in st.session_state:
 def logged_in():
     button_appearance()
     if not st.session_state.is_logged_in:
-        register_message = "Not registered yet? Join us today and start transcribing with ease enjoying cheap and affordable transcription service <b style='color:black;'> @ ksh10/per audio minute </b> with all the other services being free!</b>"
+        register_message = "Not registered yet? Join us today and start transcribing with ease enjoying cheap and affordable transcription service <b style='color:black;'> @ ksh. 6/per audio minute </b> with 2 free minutes and other free services like text analysis and multiple translation languages available!</b>"
         register_css = f"""
             <div style="width:100%; height:auto; background-color:#1F618D; padding:20px; border-radius:8px; 
                         text-align:center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center;">
