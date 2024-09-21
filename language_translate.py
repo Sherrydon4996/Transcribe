@@ -89,7 +89,7 @@ def translate_language(username):
     if json_data is not None:
         st.session_state.data_text = json_data['text']
         text = st.text_area("This space holds the transcribed text data", json_data['text'])
-        st.info("Transcribed data loaded successfully.")
+        st.info("the Transcribed data will be loaded automatically when you select transcribed data.")
     else:
         st.error("No transcribe file available")
 
