@@ -3,7 +3,7 @@
 import streamlit as st
 from googletrans import Translator
 import json
-from sqlite_db import get_json_from_database
+from sqlite_db import get_json_database
 
 if "results" not in st.session_state:
     st.session_state.results = ""
@@ -85,7 +85,7 @@ def translate_language(username):
     st.markdown("<br>", unsafe_allow_html=True)
 
     if st.button("Use transcribed data"):
-        json_data = get_json_from_database(username)
+        json_data = get_json_database(username)
         if json_data is not None:
             st.session_state.data_text = json_data['text']
             st.info("Transcribed data loaded successfully.")
