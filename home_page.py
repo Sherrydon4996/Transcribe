@@ -32,6 +32,7 @@ except:
 
 numbers = [number for number in range(300)]
 number_file = random.choice(numbers)
+admin_username = os.environ.get("USERNAME")
 
 
 def introductory_section():
@@ -641,7 +642,7 @@ def session_state(options_menu_bar, user_name):
 
 def manage_users(username):
     if username:
-        if username == "harry_transcriber":
+        if username == admin_username:
             # Fetch all user details
             results = get_all_user_details()
             if results:
