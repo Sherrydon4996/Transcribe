@@ -117,6 +117,8 @@ def translate_language(username):
         except:
             return
 
+    
+    translated_text = None
     with col2:
         if st.button(f"Translate to {users_languages[users_target_language]}"):
             st.markdown("""
@@ -152,7 +154,7 @@ def translate_language(username):
                 except KeyError:
                     st.error("Detected language not in the database list.")
                 if detected_language != users_target_language:
-                    st.session_state.translated_text = return_translated_text(text, users_target_language)
+                    translated_text = return_translated_text(text, users_target_language)
                 else:
                     st.error(
                         f"The input text is already in {users_target_language}. Or you might have entered an unrecognized language")
@@ -160,7 +162,7 @@ def translate_language(username):
                 st.error("Please enter text to translate.")
 
     with col3:
-        st.text_area("Translated Text", st.session_state.translated_text or "", height=200)
+        st.text_area("Translated Text", translated_text or "", height=200)
 
 
 if __name__ == "__main__":
