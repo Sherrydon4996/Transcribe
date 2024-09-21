@@ -14,8 +14,7 @@ from pydub import AudioSegment
 import speech_recognition as sr
 import io
 from moviepy.editor import VideoFileClip
-from pymongo import MongoClient
-from dotenv import load_dotenv
+
 
 try:
     from english_backend import save_english_transcript
