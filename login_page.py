@@ -38,12 +38,12 @@ if "reset_password" not in st.session_state:
 
 def header():
     features = [
-        "High quality English Transcription",
-        "Swahili Transcription",
-        "High Quality Video Subtitles Generation (with translations to your choice language)",
-        "Text to speech services",
-        "Language Translation",
+        "High quality English audio and video Transcription",
+        "Swahili audio and video Transcription",
+         "Language Translation(Transcribe and translate)",
         "Language Detection",
+        "Deep teaxt analysis(test yourself for more)",
+        "Text to speech services",
     ]
 
     # Create the list in pairs for four columns
