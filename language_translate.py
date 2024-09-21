@@ -4,24 +4,13 @@ import json
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
-import logging
+from sqlite_db import get_json_from_database
 
 
-import ssl
-
-
-# Create SSL context to enforce TLS 1.2
-ssl_context = ssl.create_default_context()
-ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2  # Enforce TLS 1.2 or later
-
-client = MongoClient(
-    string_word,
-    ssl=True,
-    ssl_cert_reqs=ssl.CERT_REQUIRED,  # Ensure certificates are validated
-    tls=True,
-    ssl_context=ssl_context
-)
-
+load_dotenv()
+password = os.getenv("PASSWORD")
+string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
+client = MongoClient(string_word)
 db = client["Transcription"]
 
 
@@ -46,28 +35,6 @@ if 'uploaded' not in st.session_state:
     st.session_state.uploaded = ""
 if 'translated_text' not in st.session_state:
     st.session_state.translated_text = ""
-
-
-def get_json_from_database(username):
-    try:
-        db_collections = db["user_registration"]
-
-        # Fetch the document for the specified user, only returning 'json_file'
-        results = db_collections.find_one({"username": username}, {"json_file": 1, "_id": 0})
-
-        if results and results.get("json_file"):
-            # Attempt to load the JSON data
-            json_info = json.loads(results["json_file"])
-            return json_info
-        else:
-            return None  # Explicitly return None if no results or json_file is empty
-    except json.JSONDecodeError as e:
-        logging.error(f"Error decoding JSON for user {username}: {e}")
-        return None  # Return None in case of JSON parsing error
-    except Exception as e:
-        logging.error(f"An error occurred while fetching JSON for user {username}: {e}")
-        return None  # Return None for any other exceptions
-
 
 # Function to select language
 def select_language():
@@ -101,9 +68,9 @@ def select_language():
 
     col11, col12, col13 = st.columns([3, 1, 3])
     with col11:
-        st.image("static/58.jpg")
+        st.image("images/58.jpg")
     with col13:
-        st.image("static/59.jpg")
+        st.image("images/59.jpg")
     st.subheader(":green[Select and set your target language]")
     with open("languages_value.json", "r") as file5:
         language_list = json.load(file5)
