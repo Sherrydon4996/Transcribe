@@ -87,15 +87,27 @@ def get_logins(username):
 
 def update_password(new_password, username):
     try:
-        connection = sqlite3.connect('transcribed_data.db')
+        connection = sqlite3.connect('harry_data.db')
         cursor = connection.cursor()
+
+        # First, check if the user exists
+        cursor.execute("SELECT * FROM user_details WHERE username=?", (username,))
+        results = cursor.fetchone()
+
+        if results is None:
+            connection.close()
+            return False  # User not found
+
+        # If we're here, the user exists, so update the password
         hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
-        cursor.execute("update user_details set password=? where username=?", (hashed_password, username))
+        cursor.execute("UPDATE user_details SET password=? WHERE username=?", (hashed_password, username))
         connection.commit()
         connection.close()
-        return True
+        return True  # Password updated successfully
+
     except Exception as e:
         st.error(f"Error: {e}")
+        return False
 
 
 def check_duplicate_registrations(username, email):
