@@ -84,14 +84,14 @@ def translate_language(username):
     """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
-    if st.button("Use transcribed data"):
-        json_data = get_json_database(username)
-        if json_data is not None:
-            st.session_state.data_text = json_data['text']
-            text = st.text_area("This space holds the transcribed text data", json_data['text'])
-            st.info("Transcribed data loaded successfully.")
-        else:
-            st.error("No transcribe file available")
+    # if st.button("Use transcribed data"):
+    json_data = get_json_database(username)
+    if json_data is not None:
+        st.session_state.data_text = json_data['text']
+        text = st.text_area("This space holds the transcribed text data", json_data['text'])
+        st.info("Transcribed data loaded successfully.")
+    else:
+        st.error("No transcribe file available")
 
     uploaded_file_in = st.file_uploader("Upload a file to translate", type=["txt"])
     if uploaded_file_in is not None:
@@ -102,16 +102,20 @@ def translate_language(username):
 
     col1, col2, col3 = st.columns([2, 1, 2])
 
+    displayed = st.selectbox("Chose a file to translate", ["Transcribed_File", "Uploaded_File", "Text"])
+
     with col1:
         try:
-            if st.session_state.uploaded:
+            if displayed == "Uploaded_File":
                 text = st.text_area("This space holds the transcribed text data", st.session_state.uploaded,
                                     height=200)
                 st.warning("Remember to cancel uploaded files to avoid translating the wrong files")
-            elif st.session_state.data_text:
+            elif displayed == "Transcribed_File":
+
                 text = st.text_area("Enter text or upload file to translate", st.session_state.data_text, height=200)
                 st.warning("Remember to cancel uploaded files to avoid translating the wrong files")
-            else:
+
+            elif displayed == "Text":
                 text = st.text_area("Enter text or upload file to translate", "", height=200)
                 st.warning("Remember to cancel any previous uploaded files to avoid translating the wrong files")
         except:
