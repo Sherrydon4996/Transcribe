@@ -39,22 +39,6 @@ def create_database():
 
 create_database()
 
-
-def check_duplicate_username_or_email(username, email):
-    try:
-        connection = sqlite3.connect('transcribed_data.db')
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM user_details WHERE username=? OR email=?", (username, email))
-        result = cursor.fetchone()
-        connection.close()
-        if result:
-            return result
-        else:
-            return None
-    except Exception as e:
-        st.error(f"Error: {e}")
-
-
 def save_credentials_to_database(full_name, username, email, new_password):
     try:
         connection = sqlite3.connect('transcribed_data.db')
