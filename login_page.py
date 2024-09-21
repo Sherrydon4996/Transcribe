@@ -119,7 +119,7 @@ def show_registration_form():
     col4, col5 = st.columns(2)
     with col4:
         size = (800, 450)
-        img = Image.open("images/register.jpg")
+        img = Image.open("static/register.jpg")
         resized_image = img.resize(size, Image.LANCZOS)
         st.image(resized_image)
     with col5:
@@ -161,7 +161,7 @@ def login():
     col6, col7 = st.columns(2)
     with col6:
         size = (750, 350)
-        img = Image.open("images/register2.jpg")
+        img = Image.open("static/register2.jpg")
         resized_image = img.resize(size, Image.LANCZOS)
         st.image(resized_image)
 
@@ -200,7 +200,7 @@ def reset_password():
     col8, col9 = st.columns(2)
     with col8:
         size = (800, 300)
-        img = Image.open("images/image.png")
+        img = Image.open("static/image.png")
         new_image = img.resize(size, Image.LANCZOS)
         st.image(new_image)
     with col9:
