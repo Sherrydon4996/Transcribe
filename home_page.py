@@ -8,29 +8,14 @@ import glob
 from pathlib import Path
 import pandas as pd
 import random
+import MySQLdb
 from streamlit_option_menu import option_menu
 from pydub import AudioSegment
 import speech_recognition as sr
 import io
 from moviepy.editor import VideoFileClip
 from pymongo import MongoClient
-import ssl
-
-
-# Create SSL context to enforce TLS 1.2
-ssl_context = ssl.create_default_context()
-ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2  # Enforce TLS 1.2 or later
-string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-client = MongoClient(
-    string_word,
-    ssl=True,
-    ssl_cert_reqs=ssl.CERT_REQUIRED,  # Ensure certificates are validated
-    tls=True,
-    ssl_context=ssl_context
-)
-
-
-
+from dotenv import load_dotenv
 
 try:
     from english_backend import save_english_transcript
@@ -38,30 +23,17 @@ try:
     from video_to_audio import export_full_audio
     from upload_video_convert_audio_format import upload_video_and_convert_audio_format
     from text_to_audio import convert_text_to_audio, footer_notes
-    from language_translate import translate_language, get_json_from_database
+    from language_translate import translate_language
     from text_analysis import call_functions
     from video_subtitles import call_subtitle_functions
+    from sqlite_db import (get_user_balance, update_balance,
+                           save_json_file, get_all_user_details, get_login_history,
+                           delete_user, clear_login_history, get_json_from_database)
 except:
     st.info("Unexpected error occurred, try refreshing the page!")
 
 numbers = [number for number in range(300)]
 number_file = random.choice(numbers)
-
-
-
-
-db = client["Transcription"]
-
-
-def web_app_appearance():
-    st.markdown("""
-    <style>
-        .stApp {
-            background-color:#aab7b8 ;
-        }
-    </style>
-
-    """, unsafe_allow_html=True)
 
 
 def introductory_section():
@@ -87,12 +59,12 @@ def microphone_icon_appearance():
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col1:
         image_size = (800, 600)
-        img = Image.open("static/microphone.jpeg")
+        img = Image.open("images/microphone.jpeg")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
     with col2:
         image_size = (700, 350)
-        img = Image.open("static/transcribe.webp")
+        img = Image.open("images/transcribe.webp")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
         st.markdown("""
@@ -107,7 +79,7 @@ def microphone_icon_appearance():
 
     with col3:
         image_size = (800, 600)
-        img = Image.open("static/microphone.jpeg")
+        img = Image.open("images/microphone.jpeg")
         resized_image = img.resize(image_size, Image.LANCZOS)
         st.image(resized_image)
 
@@ -149,7 +121,7 @@ def remove_audio_files(directory, extensions=("*.mp3", "*.wav")):
 
 def english_transcription():
     button_styling()
-    english_icon = Image.open("static/English.png")
+    english_icon = Image.open("images/English.png")
     new_icon_size = (650, 400)
     english_image = english_icon.resize(new_icon_size, Image.LANCZOS)
     # if st.button("Transcribe English"):
@@ -229,13 +201,13 @@ def process_english_audio_files(audio_bytes_file, english_uploaded_audio):
 def transcription_banner():
     st.markdown(
         """
-        <div style="background-color: #e0e0e0; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-            <h2 style="color: purple; text-align: center;">Here are three different transcription types</h2>
+        <div style="background-color: rgba(255, 0, 0,0.4) ; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <h2 style="color: white; text-align: center;">We have three different transcription types</h2>
             <ul style="font-size: 16px; line-height: 1.5;">
-                <li><strong>English High-Quality Transcription:</strong> Quality transcription of English audio @ <strong> Ksh. 10 per audio minute only.</strong></li>
-                <li><strong>Swahili High-Quality Transcription:</strong> Charges are <strong>Ksh. 10 per audio minute</strong>.</li>
+                <li><strong>English High-Quality Transcription:</strong> Quality transcription of English audio @ <strong> Ksh. 6 per audio minute only.</strong></li>
+                <li><strong>Swahili High-Quality Transcription:</strong> Charges are <strong>Ksh. 6 per audio minute</strong>.</li>
                 <li><strong>Economy Plan Transcription:</strong> Charges are <strong>Ksh. 3 per audio minute</strong>. 
-                <br>Note: Economy plan has lower quality results with no punctuation but is helpful for basic needs.</li>
+                <br>Note: Economy plan has a bit lower quality results but is helpful for basic needs.</li>
             </ul>
         </div>
         """,
@@ -294,13 +266,13 @@ def pricing_plans():
         <div class="pricing-container"> 
             <div class="plan plan-1"> 
             <h2>Plan A </h2>
-            <h4>Get 30 minutes @ discounted price of ksh.250</h4>
-            <h4>Get 50 minutes @ discounted price of ksh.450</h4>
+            <h4>Get 30 minutes @ discounted price of ksh.150</h4>
+            <h4>Get 50 minutes @ discounted price of ksh.250</h4>
             </div>
             <div class="plan plan-2">
              <h2>Plan B </h2>
-             <h4>Get 70 minutes @ discounted price of ksh.600 </h4>
-             <h4>Get 100 minutes @ discounted price of ksh.900 </h4>
+             <h4>Get 70 minutes @ discounted price of ksh.370 </h4>
+             <h4>Get 100 minutes @ discounted price of ksh.500 </h4>
             </div>
             <div class="plan plan-3">
               <h2>Plan C </h2>
@@ -369,11 +341,10 @@ def economy_transcription_plan(login_username):
                 audio = AudioSegment.from_file(audio_path)
                 duration = audio.duration_seconds
                 minutes, duration = divmod(duration, 60)
-                time_needed = (int(duration) + (60 * int(minutes))) / 12
-                total_amount = round(time_needed * 0.6, 2)
-                db_collections = db["user_registration"]
-                results = db_collections.find_one({"username": login_username}, {"amount": 1, "_id": 0})
-                amount = results["amount"]
+                time_needed = (int(duration) + (60 * int(minutes))) / 40
+                total_amount = round(time_needed * 2, 2)
+                # GET USER DATABASE BALANCE
+                amount = get_user_balance(login_username)
                 if amount:
                     st.session_state.amount_silver = amount
 
@@ -388,8 +359,8 @@ def economy_transcription_plan(login_username):
                     try:
                         text = recognizer.recognize_google(audio)
                         st.text_area("Transcribed text", text, height=300)
-                        db_balance = db["user_registration"]
-                        db_balance.update_one({"username": login_username}, {"$inc": {"amount": - total_amount}})
+                        # UPDATE USER BALANCE
+                        update_balance("-", total_amount, login_username)
                         st.success(
                             f"You audio file has been successfully transcribed. total amount deducted: ksh. {total_amount}")
                     except sr.UnknownValueError:
@@ -428,19 +399,18 @@ def load_english_files(login_username):
                     # CALCULATE TIME AND MONEY
                     duration = audio.duration_seconds
                     minutes, duration = divmod(duration, 60)
-                    time_needed = (int(duration) + (60 * int(minutes))) / 12
+                    time_needed = (int(duration) + (60 * int(minutes))) / 20
                     total_amount = round(time_needed * 2, 2)
-                    db_collections = db["user_registration"]
-                    results = db_collections.find_one({"username": login_username}, {"amount": 1, "_id": 0})
-                    if results:
-                        st.session_state.amount_gold = results["amount"]
+                    # GET DATABASE USER BALANCE
+                    balance = get_user_balance(login_username)
+                    if balance:
+                        st.session_state.amount_gold = balance
 
                     if st.session_state.amount_gold >= total_amount:
                         json_data, error = save_english_transcript(temp_audio_path, file_extension)
                         try:
-                            # my_cursor.execute("update user_details set json_files= NULL where username=%s", (login_username, ))
-                            db_collection = db["user_registration"]
-                            db_collections.update_one({"username": login_username}, {"$inc": {"amount": -total_amount}})
+                            # UPDATE USER BALANCE
+                            update_balance("-", total_amount, login_username)
                         except:
                             st.error("Database error: error removing file from database")
                         if error:
@@ -481,9 +451,8 @@ def load_english_files(login_username):
                                 )
 
                             json_datafile = json.dumps(json_data)
-                            db_collections = db["user_registration"]
-                            db_collections.update_one({"username": login_username},
-                                                      {"$set": {"json_file": json_datafile}})
+                            # SAVE JSON FILE TO DATABASE
+                            save_json_file(json_datafile, login_username)
                             st.success("json file saved to database")
                     else:
                         minutes, duration = divmod(duration, 60)
@@ -567,17 +536,18 @@ def load_swahili_files(login_username):
                     audio = AudioSegment.from_file(temp_audio_path)
                     duration = audio.duration_seconds
                     minutes, duration = divmod(duration, 60)
-                    time_needed = (int(duration) + (60 * int(minutes))) / 12
+                    time_needed = (int(duration) + (60 * int(minutes))) / 20
                     total_amount = round(time_needed * 2, 2)
-                    db_collections = db["user_registration"]
-                    results = db_collections.find_one({"username": login_username}, {"amount": 1, "_id": 0})
-                    if results:
-                        st.session_state.amount_swahili = results["amount"]
+                    # GET DATABASE USER BALANCE
+                    balance = get_user_balance(login_username)
+                    if balance:
+                        st.session_state.amount_swahili = balance
 
                     if st.session_state.amount_swahili >= total_amount:
                         data, error = save_transcript_swahili(temp_audio_path, file_extension)
-                        db_collections = db["user_registration"]
-                        db_collections.update_one({"username": login_username}, {"$inc": {"amount": - total_amount}})
+
+                        # UPDATE USER BALANCE
+                        update_balance("-", total_amount, login_username)
                         if error:
                             st.warning(f"error: {error}")
                         else:
@@ -672,60 +642,55 @@ def session_state(options_menu_bar, user_name):
 
 
 def manage_users(username):
-    db_collections = db["user_registration"]
-    db_login_history = db["login_info"]
     if username:
         if username == "harry_transcriber":
             # Fetch all user details
-            results = list(db_collections.find({}, {"_id": 0}))  # Exclude MongoDB's internal _id field
-            with st.expander("User registration details"):
-                if results:
-                    # Convert MongoDB results to DataFrame for display
-                    df = pd.DataFrame(results)
+            results = get_all_user_details()
+            if results:
+                with st.expander("User registration details"):
+                    df = pd.DataFrame(results, columns=["id", "full_name", "username", "email", "amount", "audio_file", "srt_file", "json_file", "password", "current_time"])
                     st.dataframe(df)
 
                     # Select a user from the list
                     selected_user = st.selectbox("Select user", df["username"])
 
+
                     if selected_user:
                         # Handle user deletion
                         if st.button("Delete user"):
-                            db_collections.delete_one({"username": selected_user})
+                            delete_user(username)
                             st.success(f"User '{selected_user}' has been deleted successfully")
-                else:
-                    st.info("No registration details yet")
+                    else:
+                        st.info("No registration details yet")
 
-            with st.expander("User amount"):
-                if results:
+                with st.expander("User amount"):
                     selected_user = st.selectbox("Select user to add amount", df["username"])
                     sign = st.selectbox("Select sign", ["+", "-"])
                     amount = st.number_input("Enter amount", min_value=0)
 
-                    if selected_user:
-                        if st.button("Press to + or - amount"):
-                            if amount > 9:
-                                # Handle increment or decrement of user's balance
-                                update_operator = "$inc" if sign == "+" else "$dec"
-                                db_collections.update_one({"username": selected_user},
-                                                          {update_operator: {"amount": amount}})
+                    if selected_user and st.button("Press to + or - amount"):
+                        if amount > 9:
+                            # UPDATE USER BALANCE
+                            update_balance(sign, amount, selected_user)
 
-                                action = "added to" if sign == "+" else "deducted from"
-                                st.success(f"{amount} was {action} the user's account successfully")
-                            else:
-                                st.error("Kindly enter an amount greater than 9")
-                else:
-                    st.error("No users to add amount!")
+                            action = "added to" if sign == "+" else "deducted from"
+                            st.success(f"{amount} was {action} the user's account successfully")
+                        else:
+                            st.error("Kindly enter an amount greater than 9")
+            else:
+                st.error("No users to add amount!")
 
             with st.expander("All users' login history"):
-                login_results = list(db_login_history.find({}, {"_id": 0}))
+                # GET LOGIN HISTORY
+                login_results = get_login_history()
+
                 if login_results:
-                    # Convert login history to DataFrame
-                    login_df = pd.DataFrame(login_results)
+                    login_df = pd.DataFrame(login_results, columns=["id", "name", "username", "email","currennt_time", "balance"])
                     st.dataframe(login_df)
 
-                    # Option to clear login history
                     if st.button("Clear history"):
-                        db_login_history.delete_many({})
+                        # CLEAR LOGIN HISTORY
+                        clear_login_history()
                         st.success("Login history cleared successfully")
                 else:
                     st.info("No login info yet")
@@ -733,8 +698,6 @@ def manage_users(username):
             st.error(f"You are not authorized to access this data!")
     else:
         st.info("Access key is admin username.")
-
-
 
 
 
@@ -752,7 +715,6 @@ def expanded_menu_bar(options_menu_bar, json_file, username):
 
 
 def recall_functions(user_name):
-    web_app_appearance()
     introductory_section()
     microphone_icon_appearance()
     button_styling()
@@ -763,6 +725,7 @@ def recall_functions(user_name):
     st.markdown("---")
     st.markdown("© 2024 Audio Transcription App | Developed by @Harry")
     footer_notes()
+    st.write("##")
 
 
 if __name__ == "__main__":
