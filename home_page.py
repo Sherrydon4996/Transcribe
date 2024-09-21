@@ -238,6 +238,7 @@ def pricing_plans():
             padding: 10px 20px;
             width:400px;
             margin-right:20px;
+            overflow: auto;
         }
         .plan-2 {
             background-color: silver;
@@ -246,6 +247,7 @@ def pricing_plans():
             padding: 10px 20px;
             width: 400px;
             margin-right:20px;
+            overflow: auto;
         }
         .plan-3 {
             background-color: gold;
@@ -253,7 +255,8 @@ def pricing_plans():
             font-weight:bolder;
             border: 2px solid green;
             padding: 10px 20px;
-             margin-right:20px;
+            margin-right:20px;
+            overflow: auto;
         }
             .plan-4 {
             background-color: green;
@@ -262,6 +265,7 @@ def pricing_plans():
             border: 2px solid green;
             padding: 10px 20px;
             color:white;
+            overflow: auto;
         }
         </style>
 
