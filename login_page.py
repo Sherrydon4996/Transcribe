@@ -60,7 +60,7 @@ def header():
 
     st.markdown(f"""
         <div style="
-            background: #34495E;
+            background: linear-gradient(to bottom right, red, green,blue, yellow);;
             padding: 20px; 
             border-radius: 10px; 
             text-align: center;
