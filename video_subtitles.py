@@ -226,7 +226,7 @@ def call_subtitle_functions(json_file, username):
             else:
                 st.error("There is no transcribed file. Please upload and transcribe a file")
     with col4:
-        st.image("images/sub.webp")
+        st.image("static/sub.webp")
 
 
 if __name__ == "__main__":
