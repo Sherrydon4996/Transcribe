@@ -99,11 +99,9 @@ def translate_language(username):
             st.session_state.uploaded = uploaded_file_in.read().decode("utf-8")
         except:
             return
-
-    col1, col2, col3 = st.columns([2, 1, 2])
-
+    st.subheader("Select your choice of translation, Transcribe and translate, upload a file and translate or select text and write text to translate")
     displayed = st.selectbox("Chose a file to translate", ["Transcribed_File", "Uploaded_File", "Text"])
-
+    col1, col2, col3 = st.columns([2, 1, 2])
     with col1:
         try:
             if displayed == "Uploaded_File":
