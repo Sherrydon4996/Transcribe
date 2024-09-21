@@ -2,16 +2,7 @@ import streamlit as st
 from googletrans import Translator
 import json
 import os
-from dotenv import load_dotenv
-from pymongo import MongoClient
 from sqlite_db import get_json_from_database
-
-
-load_dotenv()
-password = os.getenv("PASSWORD")
-string_word = "mongodb+srv://edwinnjogu4996:ghvfCPPaVYVaMWgd@transcription.sezw1.mongodb.net/?retryWrites=true&w=majority&appName=Transcription"
-client = MongoClient(string_word)
-db = client["Transcription"]
 
 
 def detect_language(text):
