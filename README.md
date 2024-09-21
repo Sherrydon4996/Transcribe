@@ -32,4 +32,4 @@ We welcome your feedback and contributions! Please open an issue or submit a pul
 
 ---
 
-Developed with ❤️ by @harryedu
+Developed with streamlit framework ❤️ by @harryedu
