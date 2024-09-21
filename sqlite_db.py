@@ -239,7 +239,7 @@ def clear_login_history():
         st.error(f"Error: {e}")
 
 
-def get_json_from_database(username):
+def get_json_database(username):
     try:
         connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
