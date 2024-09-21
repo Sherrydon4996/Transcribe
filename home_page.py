@@ -27,6 +27,7 @@ try:
     from sqlite_db import (get_user_balance, update_balance,
                            save_json_file, get_all_user_details, get_login_history,
                            delete_user, clear_login_history)
+    from sqlite_db import get_json_from_database
 except:
     st.info("Unexpected error occurred, try refreshing the page!")
 
