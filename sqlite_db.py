@@ -19,17 +19,17 @@ def create_database():
             srt_file TEXT,
             json_file TEXT,
             password TEXT,
-            current_time TEXT
+            current_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     cursor.execute('''
-         CREATE TABLE IF NOT EXISTS login_info (
-             id INTEGER PRIMARY KEY AUTOINCREMENT,
-             full_name TEXT,
-             username TEXT UNIQUE,
-             email TEXT UNIQUE,
-             amount REAL DEFAULT 0,
-             current_time TEXT
+         CREATE TABLE IF NOT EXISTS login_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            full_name TEXT,
+            username TEXT,
+            email TEXT,
+            amount REAL DEFAULT 0,
+            login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
          )
      ''')
 
@@ -60,11 +60,10 @@ def save_credentials_to_database(full_name, username, email, new_password):
         connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
         hashed_password = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
-        current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         cursor.execute('''INSERT INTO user_details
-                          (full_name, username, email, password, current_time)
-                          VALUES (?, ?, ?, ?, ?)''',
-                       (full_name, username, email, hashed_password, current_time))
+                          (full_name, username, email, password)
+                          VALUES (?, ?, ?, ?)''',
+                       (full_name, username, email, hashed_password))
         connection.commit()
         connection.close()
     except sqlite3.IntegrityError as e:
@@ -132,7 +131,7 @@ def save_login_history(username):
                        (username,))
         results = cursor.fetchone()
         if results:
-            cursor.execute("insert into login_info(full_name, username, email, amount, current_time) values(?,?,?,?,?)",
+            cursor.execute("insert into login_history(full_name, username, email, login_time, amount) values(?,?,?,?,?)",
                            results)
             connection.commit()
         connection.close()
@@ -208,7 +207,7 @@ def get_login_history():
     try:
         connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
-        cursor.execute("select * from login_info")
+        cursor.execute("select * from login_history")
         results = cursor.fetchall()
         connection.close()
         if results:
@@ -232,7 +231,7 @@ def clear_login_history():
     try:
         connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
-        cursor.execute("delete from login_info")
+        cursor.execute("delete from login_history")
         connection.commit()
         connection.close()
     except Exception as e:
