@@ -26,7 +26,7 @@ from upload_video_convert_audio_format import upload_video_and_convert_audio_for
 from text_to_audio import convert_text_to_audio, footer_notes
 from language_translate import translate_language
 from text_analysis import call_functions
-from video_subtitles import call_subtitle_functions
+# from video_subtitles import call_subtitle_functions
 from sqlite_db import (get_user_balance, update_balance,
                        save_json_file, get_all_user_details, get_login_history,
                        delete_user, clear_login_history)
@@ -710,8 +710,8 @@ def expanded_menu_bar(options_menu_bar, json_file, username):
         convert_text_to_audio(username)
     elif options_menu_bar == "Detect and translate language":
         translate_language(username)
-    elif options_menu_bar == "add_video_subtitles":
-        call_subtitle_functions(json_file, username)
+    # elif options_menu_bar == "add_video_subtitles":
+    #     call_subtitle_functions(json_file, username)
     elif options_menu_bar == "admins_page":
         manage_users(username)
 
