@@ -13,7 +13,10 @@ from pydub import AudioSegment
 import speech_recognition as sr
 import io
 from moviepy.editor import VideoFileClip
-
+try:
+    from sqlite_db import get_json_database
+except ImportError as e:
+    st.error(f"Error importing get_json_database: {e}")
 
 try:
     from english_backend import save_english_transcript
@@ -27,9 +30,9 @@ try:
     from sqlite_db import (get_user_balance, update_balance,
                            save_json_file, get_all_user_details, get_login_history,
                            delete_user, clear_login_history)
-    from sqlite_db import get_json_database
 except:
     st.info("Unexpected error occurred, try refreshing the page!")
+
 
 numbers = [number for number in range(300)]
 number_file = random.choice(numbers)
