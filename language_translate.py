@@ -1,3 +1,6 @@
+
+
+import streamlit as st
 if "results" not in st.session_state:
     st.session_state.results = ""
 if 'data_text' not in st.session_state:
@@ -6,10 +9,6 @@ if 'uploaded' not in st.session_state:
     st.session_state.uploaded = ""
 if 'translated_text' not in st.session_state:
     st.session_state.translated_text = ""
-
-
-
-import streamlit as st
 from googletrans import Translator
 import json
 from sqlite_db import get_json_from_database
