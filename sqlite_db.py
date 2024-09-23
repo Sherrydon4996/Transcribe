@@ -308,6 +308,7 @@ def save_user_comments(username, full_name, comment):
         st.error(f"Error: {e}")
 
 
+
 # def add_to_user_comment(username, full_name, comment):
 #     connection = sqlite3.connect('transcribed_data.db')
 #     cursor = connection.cursor()
@@ -318,7 +319,13 @@ def save_user_comments(username, full_name, comment):
 
 
 # add_to_user_comment("peterN", "peter ngacha", "This app is awsome, now i will be visiting you github often")
-
+def add_to_user_comment(username, full_name, comment):
+    connection = sqlite3.connect('transcribed_data.db')
+    cursor = connection.cursor()
+    cursor.execute("delete from user_comments where username=?",
+                   (username, ))
+    connection.commit()
+    connection.close()
 
 def retrieve_user_comments():
     try:
