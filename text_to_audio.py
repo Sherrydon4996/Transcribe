@@ -56,7 +56,7 @@ def download_audio_file(username):
     try:
         results = get_audio_filename(username)
         if results:
-            file2 = results["audio_filename"]
+            file2 = results
             with open(file2, 'rb') as f:
                 st.download_button(
                     label="Download audio file",
