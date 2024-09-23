@@ -45,7 +45,7 @@ def introductory_section():
             " transcription services in English and Swahili to meet your needs. Thank you for visiting our site,"
             " and we hope you enjoyed our services.")
     st.markdown(f"""
-    <div style="background-color:#4CAF50;overflow:scroll; padding: 20px; border-radius: 10px; text-align: center;">
+    <div style="background-color:#4CAF50;overflow:auto; padding: 20px; border-radius: 10px; text-align: center;">
         <h1 style="color: white; font-family: 'Arial', sans-serif;">
             Brief Introduction
         </h1>
@@ -133,7 +133,7 @@ def english_transcription():
             "Upload your video or audio files, and we'll transcribe the content for you! Our service supports multiple formats and provides accurate text outputs."
             " Experience the power of our advanced transcription app for seamless and accurate audio-to-text conversion.")
         banner_html = f"""
-        <div style="padding:overflow:scroll; 15px; background-color: #4CAF50; border-radius: 5px;">
+        <div style="padding:overflow:auto; 15px; background-color: #4CAF50; border-radius: 5px;">
             <h2 style="color: white; text-align: center;">🎙️ Transcription Service</h2>
             <h4 style="color: white; text-align: center;">
              {content}
@@ -148,7 +148,7 @@ def english_transcription():
         content = ("Enjoy unparalleled accuracy with our Premium English Transcription App. Delivering "
                    "high-quality output, ensuring precision and ease of use for professionals and enthusiasts alike.")
         banner_html = f"""
-             <div style="padding:ooverflow:scroll; 15px; background-color: #4CAF50; border-radius: 5px;">
+             <div style="padding:overflow:auto; 15px; background-color: #4CAF50; border-radius: 5px;">
                  <h2 style="color: white; text-align: center;">🎙️ Transcription Service</h2>
                  <h4 style="color: white; text-align: center;">
                   {content}
@@ -156,7 +156,7 @@ def english_transcription():
              </div>
            """
         st.markdown(banner_html, unsafe_allow_html=True)
-    st.markdown("""<div style="background-color:#1C2833;overflow:scroll; width:700px; text-align:center;
+    st.markdown("""<div style="background-color:#1C2833;overflow:auto; width:700px; text-align:center;
      height: 40px; border-radius:15px;">
         <h3 style="color:#F9E79F;">English Transcription:: Upload your audio file below..</h3>
     </div>""", unsafe_allow_html=True)
@@ -164,7 +164,7 @@ def english_transcription():
 
 def upload_english_audio_files():
     uploaded_audio = st.file_uploader(f"Upload an english file", type=["mp3", "wav"])
-    st.markdown("""<div style="background-color:#D35400;overflow:scroll; text-align:center;
+    st.markdown("""<div style="background-color:#D35400;overflow:auto; text-align:center;
            height: 40px;">
               <h3 style="color:#00D3BE;"> Upload a video instead..</h3>
           </div>""", unsafe_allow_html=True)
@@ -176,7 +176,7 @@ def upload_english_audio_files():
 
 def upload_swahili_audio_files():
     uploaded_audio = st.file_uploader("Upload swahili_file", type=["mp3", "wav"])
-    st.markdown("""<div style="background-color:#D35400;overflow:scroll; text-align:center;
+    st.markdown("""<div style="background-color:#D35400;overflow:auto; text-align:center;
           height: 40px;">
              <h3 style="color:#00D3BE;"> Upload a video instead..</h3>
          </div>""", unsafe_allow_html=True)
@@ -203,7 +203,7 @@ def process_english_audio_files(audio_bytes_file, english_uploaded_audio):
 def transcription_banner():
     st.markdown(
         """
-        <div style="background-color:overflow:scroll; rgba(255, 0, 0,0.4) ; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <div style="background-color:overflow:auto; rgba(255, 0, 0,0.4) ; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
             <h2 style="color: white; text-align: center;">We have three different transcription types</h2>
             <ul style="font-size: 16px; line-height: 1.5;">
                 <li><strong>English High-Quality Transcription:</strong> Quality transcription of English audio @ <strong> Ksh. 6 per audio minute only.</strong></li>
@@ -305,7 +305,7 @@ if "amount_swahili" not in st.session_state:
 def economy_transcription_plan(login_username):
     st.markdown(
         """
-    <div style="background-color: #2C3E50;overflow:scroll; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+    <div style="background-color: #2C3E50;overflow:auto; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
         <h2 style="color: #ECF0F1; text-align: center;">Unlock the Power of Readable Transcriptions</h2>
         <p style="color: #BDC3C7; font-size: 18px; text-align: center; line-height: 1.6;">
             Seamlessly convert your audio and video content into clear, concise, and readable text. 
@@ -477,7 +477,7 @@ def swahili_transcription():
     with col7:
         content = f"Karibu kwenye Tovuti Yetu ya Kutafsiri Sauti! Tovuti hii inakupa uwezo wa kutafsiri faili za sauti kwa usahihi na haraka."
         banner_html = f"""
-             <div style="padding: 15px; background-color: #4CAF50;overflow:scroll; border-radius: 5px;">
+             <div style="padding: 15px; background-color: #4CAF50;overflow:auto; border-radius: 5px;">
                  <h2 style="color: white; text-align: center;">🎙️ Transcription Service</h2>
                  <h4 style="color: white; text-align: center;">
                   {content}
@@ -490,7 +490,7 @@ def swahili_transcription():
     with col9:
         content = "Tunatoa tafsiri kwa lugha ya Kiingereza na Kiswahili ili kukidhi mahitaji yako. Asante kwa kutembelea tovuti yetu na tunatumai utapata huduma zetu kuwa za manufaa."
         banner_html = f"""
-             <div style="padding: 15px; background-color: #4CAF50; border-radius: 5px;">
+             <div style="padding: 15px;overflow:auto; background-color: #4CAF50; border-radius: 5px;">
                  <h2 style="color: white; text-align: center;">🎙️ Transcription Service</h2>
                  <h4 style="color: white; text-align: center;">
                   {content}

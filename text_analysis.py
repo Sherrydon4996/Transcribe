@@ -110,7 +110,7 @@ def sentiment_analysis(analysis_type, temp_file):
                                 NEGATIVE += 1
 
                         div_content = f"""
-                                        <div style="background-color:#f8f9fa;overflow:scroll; padding:15px; border-radius:10px; margin-bottom:20px;
+                                        <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                          font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                             <h4 style="color:#343a40; text-align:left;">Total number of sentiments: {df.shape[0]}</h4>
                                             <h5 style="color:#343a40; text-align:left;">Positive sentiments: {POSITIVE}</h5>
