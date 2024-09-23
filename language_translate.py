@@ -45,7 +45,7 @@ def select_language():
     int = "This tool is perfect for quick translations, whether you're working on a project, reading foreign documents, or simply learning a new language. Enjoy your translation experience!"
 
     st.markdown(f"""
-        <div style="background-color:#1E90FF; padding:20px; border-radius:10px; margin-bottom:20px;">
+        <div style="background-color:#1E90FF;overflow:auto; padding:20px; border-radius:10px; margin-bottom:20px;">
             <h2 style="color:#FFFFFF; text-align:center; margin-bottom:15px;">🌍 Translate Text or Documents to Your Chosen Language 🌍</h2>
             <h4 style="color:#F0F8FF; font-size:18px; margin-bottom:15px;">{introduction}</h4>
             <h3 style="color:#F0F8FF; font-size:20px; margin-bottom:10px;">Instructions:</h3>
@@ -78,7 +78,7 @@ def select_language():
 def translate_language(username):
     users_languages, users_target_language = select_language()
     st.markdown("""
-        <div style="background-color:#1E90FF; padding:10px; border-radius:5px; margin-top:10px;">
+        <div style="background-color:#1E90FF;overflow:auto; padding:10px; border-radius:5px; margin-top:10px;">
             <h2 style="color:#000000; text-align:center; color:purple;">Translate</h2>
         </div>
     """, unsafe_allow_html=True)

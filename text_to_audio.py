@@ -10,7 +10,7 @@ image_size = (1000, 900)
 
 def page_header():
     st.markdown("""
-    <div style="background-color:#4CAF50; padding: 20px; border-radius: 10px; text-align: center;">
+    <div style="background-color:#4CAF50;overflow:auto; padding: 20px; border-radius: 10px; text-align: center;">
         <h1 style="color: white; font-family: 'Arial', sans-serif;">
             🎤 Convert your Text-to-Speech here 🎧
         </h1>
@@ -85,6 +85,7 @@ def banner_text(text):
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 10px;
             margin-bottom: 20px;
+            overflow:auto;
         ">
             <h3 style="
                 color: white;
@@ -101,7 +102,7 @@ def banner_text(text):
 
 def footer_notes():
     st.markdown("""
-    <div style="background-color: rgba(255,0,0,0.3); padding: 30px; border-top: 2px solid #e9ecef; text-align: center;">
+    <div style="background-color: rgba(255,0,0,0.3);overflow:auto; padding: 30px; border-top: 2px solid #e9ecef; text-align: center;">
         <h3 style="font-size: 20px; color: white; margin-bottom: 15px;">Thank You for Using Our Application!</h3>
         <h4 style="font-size: 16px; color: black; margin-bottom: 20px;">
             We hope our tool has helped streamline your workflow. Your feedback is essential to our growth and continued improvement.
@@ -192,7 +193,7 @@ def convert_text_to_audio(username):
         text = st.text_area("Text", string_file, height=250)
     else:
         st.markdown("""
-            <div style="background-color:#ADD8E6; padding:10px; border-radius:5px;">
+            <div style="background-color:#ADD8E6;overflow:auto; padding:10px; border-radius:5px;">
                 <h3 style="color:#000000; text-align:center;">Text to Speech</h3>
                 <p style="color:#000000; text-align:center;">Enter text to convert to speech</p>
             </div>

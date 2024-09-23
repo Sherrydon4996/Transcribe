@@ -28,7 +28,7 @@ def page_header():
                " Lastly, topic detection and summarization identify the main themes and key points within a text,"
                " making it easier to understand the central subjects and obtain concise overviews.")
     st.markdown(f"""
-    <div style="background-color:#4CAF50; padding: 20px; border-radius: 10px; text-align: center;">
+    <div style="background-color:#4CAF50;overflow:auto; padding: 20px; border-radius: 10px; text-align: center;">
         <h1 style="color: white; font-family: 'Arial', sans-serif;">
             🎤 This is the last section where you can access all text analysis of your audio file. 🎧
         </h1>
@@ -44,7 +44,7 @@ def page_header():
 
 def display_no_category_banner(category):
     banner_html = f"""
-    <div style="background-color:white; padding:20px; border-radius:15px; margin-top:30px; font-family:'Courier New', Courier, monospace; text-align:center; width:100%; height:300px;">
+    <div style="background-color:white;overflow:auto; padding:20px; border-radius:15px; margin-top:30px; font-family:'Courier New', Courier, monospace; text-align:center; width:100%; height:300px;">
         <h2 style="color:black; text-align:center; position:relative; top:70px; ">No {category} detected</h2>
         <p style="color:green; text-align:center; position:relative; top:70px; ">Make sure you have a transcribed file already</p>
         <p style="color:green; text-align:center; position:relative; top:70px; ">If you already have a transcribed file, then your content does not apply for {category} category</p>
@@ -56,7 +56,7 @@ def display_no_category_banner(category):
 def analysis_type_header(entity_type, color, content):
     banner_html = f"""
     </div>
-      <div style="background-color:{color}; padding:10px; border-radius:10px; text-align:center;">
+      <div style="background-color:{color};overflow:auto; padding:10px; border-radius:10px; text-align:center;">
                         <h2 style="color:orange;">Analysis_type: {entity_type}</h2>
                         <p style="color:white; font-size:18px;">{content}</p>
     </div>
@@ -75,7 +75,7 @@ def sentiment_analysis(analysis_type, temp_file):
             " underlying feelings or attitudes expressed.")
         banner_html = f"""
         </div>
-          <div style="background-color:green; padding:10px; border-radius:10px; text-align:center;">
+          <div style="background-color:green; padding:10px; border-radius:10px;overflow:auto; text-align:center;">
                             <h2 style="color:orange;">Analysis_type: Sentiment_analysis</h2>
                             <p style="color:white; font-size:18px;">{content}</p>
         </div>
@@ -110,7 +110,7 @@ def sentiment_analysis(analysis_type, temp_file):
                                 NEGATIVE += 1
 
                         div_content = f"""
-                                        <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                        <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                          font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                             <h4 style="color:#343a40; text-align:left;">Total number of sentiments: {df.shape[0]}</h4>
                                             <h5 style="color:#343a40; text-align:left;">Positive sentiments: {POSITIVE}</h5>
@@ -199,7 +199,7 @@ def sentiment_analysis(analysis_type, temp_file):
 
 def entity_header(entity_type, color):
     banner_html = f"""
-    <div style="background-color:{color}; padding:10px; border-radius:5px; width:100%; text-align:center; display:flex; align-items:center; justify-content:center;">
+    <div style="background-color:{color};overflow:auto; padding:10px; border-radius:5px; width:100%; text-align:center; display:flex; align-items:center; justify-content:center;">
         <h4 style="color:white; margin:0;">Entity type: {entity_type}</h4>
     </div>
     """
@@ -255,7 +255,7 @@ def content_safety(analysis_type, temp_file):
                         time = data["timestamp"]
                         labels = data["labels"]
                         div_content = f"""
-                                        <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                        <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                          font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                           <h2 style="color:green; text-align:left;">{index + 1}. Sensitive phrase or word</h2>
                                             <h6 style="color:#343a40; text-align:left;">{data["text"]}</h6>
@@ -263,7 +263,7 @@ def content_safety(analysis_type, temp_file):
                         st.markdown(div_content, unsafe_allow_html=True)
                         for index, lab in enumerate(labels):
                             div_content = f"""
-                                      <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                      <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                        font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                           <h4 style="color:#343a40; text-align:left;">{index + 1}. Category and judgment</h4>
                                           <p style="color:#495057; text-align:left; font-size:16px;">
@@ -276,7 +276,7 @@ def content_safety(analysis_type, temp_file):
                                       """
                             st.markdown(div_content, unsafe_allow_html=True)
                         div_content = f"""
-                                          <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                          <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                            font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                               <h4 style="color:#343a40; text-align:left;"> Exact time on the content</h4>
                                               <p style="color:red; text-align:left; font-size:14px;">
@@ -291,7 +291,7 @@ def content_safety(analysis_type, temp_file):
                 with col3:
                     for index, data2 in enumerate(summary_data):
                         div_content = f"""
-                                       <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                       <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                         font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                          <h2 style="color:green; text-align:left;">{index + 1}. Sensitive content Category</h2>
                                            <h4 style="color:#343a40; text-align:left;">Category: {data2}</h4>
@@ -300,7 +300,7 @@ def content_safety(analysis_type, temp_file):
 
                         if data2 in assembly_labels:
                             div_content = f"""
-                                              <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                              <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                                font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                                   <h4 style="color:#343a40; text-align:left;"> Number of times it appears and its judgment</h4>
                                                   <p style="color:#495057; text-align:left; font-size:16px;">
@@ -338,7 +338,7 @@ def Topic_detection(analysis_type, temp_file):
                         labels_html += f"<p style='color:#495057; text-align:left; font-size:16px;'>{index + 1}. {lab['label']}</p>"
 
                     div_content = f"""
-                    <div style="background-color:#e9ecef; padding:15px; border-radius:10px; margin-bottom:20px; font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+                    <div style="background-color:#e9ecef;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px; font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                         <h4 style="color:#343a40; text-align:left;">Detected Topics</h4>
                         {labels_html}
                     </div>
@@ -366,7 +366,7 @@ def speaker_labels(analysis_type, temp_file):
                 else:
                     for data in summary_data:
                         div_content = f"""
-                        <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px; font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+                        <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px; font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                             <h4 style="color:#343a40; text-align:left;">Speaker: {data['speaker']}</h4>
                             <p style="color:#495057; text-align:left; font-size:16px;">
                                 {data['text']}
@@ -400,7 +400,7 @@ def text_summary(analysis_type, temp_file):
                 display_no_category_banner("text_summary=>(no summary in file)")
             else:
                 div_content = f"""
-                              <div style="background-color:#e9ecef; padding:15px; border-radius:10px;
+                              <div style="background-color:#e9ecef;overflow:auto; padding:15px; border-radius:10px;
                                margin-bottom:20px; font-family:'Arial', sans-serif;
                                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                   {summary_data}

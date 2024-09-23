@@ -4,7 +4,7 @@ import json
 
 def entity_header(entity_type, color):
     banner_html = f"""
-    <div style="background-color:{color}; padding:10px; border-radius:5px; width:100%; text-align:center; display:flex; align-items:center; justify-content:center;">
+    <div style="background-color:{color};overflow:auto; padding:10px; border-radius:5px; width:100%; text-align:center; display:flex; align-items:center; justify-content:center;">
         <h2 style="color:white; margin:0;">{entity_type}</h2>
     </div>
     """
@@ -13,7 +13,7 @@ def entity_header(entity_type, color):
 
 def display_no_category_banner(category):
     banner_html = f"""
-    <div style="background-color:white; padding:20px; border-radius:15px; margin-top:30px; font-family:'Courier New', Courier, monospace; text-align:center; width:100%; height:300px;">
+    <div style="background-color:white; overflow:auto; padding:20px; border-radius:15px; margin-top:30px; font-family:'Courier New', Courier, monospace; text-align:center; width:100%; height:300px;">
         <h2 style="color:black; text-align:center; position:relative; top:70px; ">No {category} detected</h2>
         <p style="color:green; text-align:center; position:relative; top:70px; ">Make sure you have a transcribed file already</p>
         <p style="color:green; text-align:center; position:relative; top:70px; ">If you already have a transcribed file, then your content does not apply for {category} category</p>
@@ -67,7 +67,7 @@ def entity_detection1(temp_file):
                                             time_start = data["start"]
                                             time_end = data["start"]
                                             div_content = f"""
-                                                                         <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                                                         <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                                                           font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                                                            <h4 style="color:green; text-align:left;">{id + 1}. {our_int.title()}</h4>
                                                                            <p style="color:red; text-align:left; font-size:14px;">
@@ -82,7 +82,7 @@ def entity_detection1(temp_file):
 
                                     entity_header(name, "red")
                                     div_content = f"""
-                                                                          <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                                                          <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                                                            font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                                                             <h4 style="color:green; text-align:left;">No Available Data</h4>
                                                                           """
@@ -102,7 +102,7 @@ def entity_detection1(temp_file):
                                             time_start = data["start"]
                                             time_end = data["start"]
                                             div_content = f"""
-                                                                         <div style="background-color:#f8f9fa; padding:15px; border-radius:10px; margin-bottom:20px;
+                                                                         <div style="background-color:#f8f9fa;overflow:auto; padding:15px; border-radius:10px; margin-bottom:20px;
                                                                           font-family:'Arial', sans-serif; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
                                                                            <h4 style="color:green; text-align:left;">{id + 1}. {our_int.title()}</h4>
                                                                            <p style="color:red; text-align:left; font-size:14px;">

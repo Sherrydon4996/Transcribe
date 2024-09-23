@@ -62,6 +62,7 @@ def header():
         <div style="
             background: linear-gradient(to top right, rgba(255,0,0,0.4), rgba(0,255,0,0.5),rgba(0,0,0,0.6), rgba(0,0,255,0.5));
             padding: 20px; 
+            overflow: auto;
             border-radius: 10px; 
             text-align: center;
             color: #ECF0F1;
@@ -248,7 +249,7 @@ def logged_in():
     if not st.session_state.is_logged_in:
         register_message = "Not registered yet? Join us today and start transcribing with ease enjoying cheap and affordable transcription service <b style='color:black;'> @ ksh. 6/per audio minute </b> with 2 free minutes and other free services like text analysis and multiple translation languages available!</b>"
         register_css = f"""
-            <div style="width:100%; position:relative; min-height:100px; overflow:auto; background:linear-gradient(to top right, rgba(255,0,0,0.4), rgba(0,255,0,0.5),rgba(100,150,250,0.6), rgba(0,0,255,0.5)); padding:20px; border-radius:8px; 
+            <div style="width:100%; overflow:auto; position:relative; min-height:100px; overflow:auto; background:linear-gradient(to top right, rgba(255,0,0,0.4), rgba(0,255,0,0.5),rgba(100,150,250,0.6), rgba(0,0,255,0.5)); padding:20px; border-radius:8px; 
                         text-align:center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); justify-content: space-between; align-items: center;">
                 <p style="color:gold; font-size:16px; font-weight:500; position:absolute; margin: 0; left:2%; ">Create an account</p>
                 <p style="color:#F7F9F9; position:absolute; font-size:16px; font-weight:500; left:15%; right:10%; margin: 0;">{register_message}</p>
@@ -287,6 +288,7 @@ def logged_in():
                         f"""
                         <div style="
                             background-color: #f8f9fa;
+                            overflow:auto;
                             padding: 15px;
                             border-radius: 10px;
                             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -325,7 +327,7 @@ def logged_in():
 
                 st.markdown(
                     f"""
-                    <div style="background-color: #34495E; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="background-color: #34495E; padding: 15px; overflow:auto; border-radius: 8px; margin-bottom: 20px;">
                         <h3 style="color: #ECF0F1; text-align: center;">Hello and Welcome {new_username}</h3>
                         <p style="color: #BDC3C7; font-size: 16px; text-align: center;">
                             Please note that the method of payment has yet to be configured. The app is still in the testing phase.
@@ -354,7 +356,7 @@ def logged_in():
                     results = retrieve_user_comments()
                     for index, com in enumerate(results):
                         st.markdown(f"""
-                                    <div style="background-color:black; width:100%; height:200px; position:realtive">
+                                    <div style="background-color:black; width:100%; height:200px; position:relative"; overflow:auto;>
                                         <h4 style="color:red; position:absolute; left:2%; top:30%; font-family:sans-serif; text-transform:capitalize;">{index + 1}. {com[2]} &nbsp;<span style="color:blue";font-size:13px;>time: {com[4]}</span></h4>
                                         <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{com[3]}<p>
                                     </div>
