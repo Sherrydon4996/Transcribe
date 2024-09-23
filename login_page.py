@@ -6,7 +6,7 @@ import bcrypt
 
 from sqlite_db import (save_credentials_to_database, save_login_history,
                        get_logins, update_password, get_full_name, get_user_balance,
-                       check_duplicate_registrations)
+                       check_duplicate_registrations, save_user_comments, retrieve_user_comments)
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
@@ -351,16 +351,19 @@ def logged_in():
                         if results in names:
                             st.error("you can only comment once!")
                         else:
-                            data["user_views"].append({"full_name": results, "comment": comment})
-                            with open("user_comments.json", "w") as file2:
-                                json.dump(data, file2, indent=4)
+                            save_user_comments(new_username, full_name, comment)
+                            # data["user_views"].append({"full_name": results, "comment": comment})
+                            # with open("user_comments.json", "w") as file2:
+                            #     json.dump(data, file2, indent=4)
                         comment = ""
                 with st.expander("View comments"):
-                    for index, data in enumerate(data["user_views"]):
+                    # for index, data in enumerate(data["user_views"]):
+                    results = retrieve_user_comments()
+                    for index, com in enumerate(results):
                         st.markdown(f"""
                                     <div style="background-color:black; width:100%; height:200px; position:realtive">
                                         <h4 style="color:red; position:absolute; left:2%; top:30%; font-family:sans-serif; text-transform:capitalize; text-decoration:underline;">{index + 1}. {data['full_name']}</h4>
-                                        <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{data['comment']}<p>
+                                        <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{com}<p>
                                     </div>
                                     
                                     """, unsafe_allow_html=True)

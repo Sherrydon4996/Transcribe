@@ -32,6 +32,15 @@ def create_database():
             login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
          )
      ''')
+    cursor.execute('''
+         CREATE TABLE IF NOT EXISTS user_comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            full_name TEXT,
+            comment TEXT,
+            comment_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+         )
+     ''')
     # USER COMMENTS DATABASE TO BE ADDED
 
     connection.commit()
@@ -39,6 +48,7 @@ def create_database():
 
 
 create_database()
+
 
 def save_credentials_to_database(full_name, username, email, new_password):
     try:
@@ -116,8 +126,9 @@ def save_login_history(username):
                        (username,))
         results = cursor.fetchone()
         if results:
-            cursor.execute("insert into login_history(full_name, username, email, login_time, amount) values(?,?,?,?,?)",
-                           results)
+            cursor.execute(
+                "insert into login_history(full_name, username, email, login_time, amount) values(?,?,?,?,?)",
+                results)
             connection.commit()
         connection.close()
     except Exception as e:
@@ -284,3 +295,41 @@ def get_srt_file(username):
     except Exception as e:
         st.error(f"Error: {e}")
 
+
+def save_user_comments(username, full_name, comment):
+    try:
+        connection = sqlite3.connect('transcribed_data.db')
+        cursor = connection.cursor()
+        cursor.execute("insert into user_comments(username, full_name, comment) values(?,?,?)",
+                       (username, full_name, comment))
+        connection.commit()
+        connection.close()
+    except Exception as e:
+        st.error(f"Error: {e}")
+
+
+def add_to_user_comment(username, full_name, comment):
+    connection = sqlite3.connect('transcribed_data.db')
+    cursor = connection.cursor()
+    cursor.execute("insert into user_comments(username, full_name, comment) values(?,?,?)",
+                   (username, full_name, comment))
+    connection.commit()
+    connection.close()
+
+
+add_to_user_comment("peterN", "peter ngacha", "This app is awsome, now i will be visiting you github often")
+
+
+def retrieve_user_comments():
+    try:
+        connection = sqlite3.connect('transcribed_data.db')
+        cursor = connection.cursor()
+        cursor.execute("select * from user_comments")
+        results = cursor.fetchall()
+        connection.close()
+        if results:
+            return results
+        return None
+
+    except Exception as e:
+        st.error(f"Error: {e}")
