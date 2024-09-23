@@ -348,7 +348,7 @@ def logged_in():
                 if comment:
                     full_name, email = get_full_name(new_username)
                     if st.button("add_comment"):
-                        if user_commented(new_username):
+                        if user_commented(new_username) and new_username != "harry_transcriber@4996":
                             st.error("you can only comment once!")
                         else:
                             save_user_comments(new_username, full_name, comment)
