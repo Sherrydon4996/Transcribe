@@ -133,12 +133,13 @@ def english_transcription():
             "Upload your video or audio files, and we'll transcribe the content for you! Our service supports multiple formats and provides accurate text outputs."
             " Experience the power of our advanced transcription app for seamless and accurate audio-to-text conversion.")
         banner_html = f"""
-        <div style="padding:overflow:auto; 15px; background-color: #4CAF50; border-radius: 5px;">
-            <h2 style="color: white; text-align: center;">🎙️ Transcription Service</h2>
-            <h4 style="color: white; text-align: center;">
-             {content}
-            </h4>
         </div>
+        <div style="max-width: 100%; padding: 15px; background-color: #4CAF50; border-radius: 5px; box-sizing: border-box; margin: 0 auto;">
+        <h2 style="color: white; text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: 10px;">🎙️ Transcription Service</h2>
+        <h4 style="color: white; text-align: center; font-size: clamp(1rem, 3vw, 1.5rem); margin: 0; overflow-wrap: break-word; word-wrap: break-word;">
+            {content}
+        </h4>
+    </div>
         """
         st.markdown(banner_html, unsafe_allow_html=True)
     with col11:
