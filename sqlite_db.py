@@ -309,27 +309,18 @@ def save_user_comments(username, full_name, comment):
 
 
 
-# def add_to_user_comment(username, full_name, comment):
-#     connection = sqlite3.connect('transcribed_data.db')
-#     cursor = connection.cursor()
-#     cursor.execute("insert into user_comments(username, full_name, comment) values(?,?,?)",
-#                    (username, full_name, comment))
-#     connection.commit()
-#     connection.close()
-
-
-# add_to_user_comment("peterN", "peter ngacha", "This app is awsome, now i will be visiting your github often")
-
-def add_to_user_comment(username):
+def add_to_user_comment(username, full_name, comment):
     connection = sqlite3.connect('transcribed_data.db')
     cursor = connection.cursor()
-    cursor.execute("delete from user_comments where username=?",
-                   (username, ))
+    cursor.execute("insert into user_comments(username, full_name, comment) values(?,?,?)",
+                   (username, full_name, comment))
     connection.commit()
     connection.close()
 
 
-add_to_user_comment("peterN", )
+add_to_user_comment("harryedu", "garrison edu", "Great work, keep it up")
+add_to_user_comment("peterN", "peter ngacha", "This app is awsome, now i will be visiting your github often")
+
 
 
 def retrieve_user_comments():
