@@ -3,7 +3,7 @@ from video_to_audio import export_full_audio
 from io import BytesIO
 import tempfile
 import time
-from english_backend import save_english_transcript
+from english_transcription import save_english_transcript
 import os
 import glob
 from pydub import AudioSegment
