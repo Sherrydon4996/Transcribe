@@ -718,6 +718,7 @@ def manage_users(username):
                 results = retrieve_user_comments()
                 if results:
                     df = pd.DataFrame(results, columns=["id", "username", "full_name", "comment", "comment_time"])
+                    st.dataframe(df)
                     username_chosen = st.selectbox("Select username to filter comment", df["username"])
                     update_message = st.text_area("enter message to update with")
                     if update_message and username_chosen:
