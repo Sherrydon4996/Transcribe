@@ -705,7 +705,7 @@ def manage_users(username):
                 results = retrieve_user_comments()
                 if results:
                     df = pd.DataFrame(results, columns=["id", "username", "full_name", "comment", "comment_time"])
-                    username_chosen = st.selectbox("Select username to delete comment", [df["username"]])
+                    username_chosen = st.selectbox("Select username to delete comment", df["username"])
                     if st.button("delete comment"):
                         delete_comment(username_chosen)
                         st.success("user_comment was successfully deleted")
@@ -717,7 +717,7 @@ def manage_users(username):
                 results = retrieve_user_comments()
                 if results:
                     df = pd.DataFrame(results, columns=["id", "username", "full_name", "comment", "comment_time"])
-                    username_chosen = st.selectbox("Select username to delete comment", [df["username"]])
+                    username_chosen = st.selectbox("Select username to delete comment", df["username"])
                     update_message = st.text_area("enter message to update with")
                     if update_message and username_chosen:
                         if st.button("update comment"):
