@@ -32,6 +32,7 @@ def create_database():
             login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
          )
      ''')
+    # USER COMMENTS DATABASE TO BE ADDED
 
     connection.commit()
     connection.close()
