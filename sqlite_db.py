@@ -323,6 +323,21 @@ def user_commented(username):
         st.error(f"Error: {e}")
 
 
+def user_delete(username):
+    try:
+        connection = sqlite3.connect('transcribed_data.db')
+        cursor = connection.cursor()
+        cursor.execute("delete from user_comments where username=?",
+                       (username,))
+        connection.commit()
+        connection.close()
+    except Exception as e:
+        st.error(f"Error: {e}")
+
+
+user_delete("harry_transcriber@4996")
+
+
 def retrieve_user_comments():
     try:
         connection = sqlite3.connect('transcribed_data.db')
