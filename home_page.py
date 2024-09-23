@@ -134,7 +134,7 @@ def english_transcription():
             " Experience the power of our advanced transcription app for seamless and accurate audio-to-text conversion.")
         banner_html = f"""
         </div>
-        <div style="max-width: 100%; padding: 15px; background-color: #4CAF50; border-radius: 5px; box-sizing: border-box; margin: 0 auto;">
+        <div style="max-width: 100%; padding: 15px; background-color: transparent; border-radius: 5px; box-sizing: border-box; margin: 0 auto;">
         <h2 style="color: white; text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: 10px;">🎙️ Transcription Service</h2>
         <h4 style="color: white; text-align: center; font-size: clamp(1rem, 3vw, 1.5rem); margin: 0; overflow-wrap: break-word; word-wrap: break-word;">
             {content}
@@ -149,12 +149,12 @@ def english_transcription():
         content = ("Enjoy unparalleled accuracy with our Premium English Transcription App. Delivering "
                    "high-quality output, ensuring precision and ease of use for professionals and enthusiasts alike.")
         banner_html = f"""
-             <div style="padding:overflow:auto; 15px; background-color: #4CAF50; border-radius: 5px;">
-                 <h2 style="color: white; text-align: center;">🎙️ Transcription Service</h2>
-                 <h4 style="color: white; text-align: center;">
-                  {content}
-                 </h4>
-             </div>
+         </div>
+        <div style="max-width: 100%; padding: 15px; background-color: transparent; border-radius: 5px; box-sizing: border-box; margin: 0 auto;">
+        <h2 style="color: white; text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: 10px;">🎙️ Transcription Service</h2>
+        <h4 style="color: white; text-align: center; font-size: clamp(1rem, 3vw, 1.5rem); margin: 0; overflow-wrap: break-word; word-wrap: break-word;">
+            {content}
+        </h4>
            """
         st.markdown(banner_html, unsafe_allow_html=True)
     st.markdown("""<div style="background-color:#1C2833;overflow:auto; width:700px; text-align:center;
