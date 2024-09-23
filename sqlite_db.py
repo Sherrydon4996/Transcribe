@@ -81,7 +81,7 @@ def get_logins(username):
 
 def update_password(new_password, username):
     try:
-        connection = sqlite3.connect('harry_data.db')
+        connection = sqlite3.connect('transcribed_data.db')
         cursor = connection.cursor()
 
         # First, check if the user exists
