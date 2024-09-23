@@ -326,6 +326,7 @@ def add_to_user_comment(username, full_name, comment):
                    (username, ))
     connection.commit()
     connection.close()
+add_to_user_comment("peter ngacha")
 
 def retrieve_user_comments():
     try:
