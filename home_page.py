@@ -29,7 +29,7 @@ from text_analysis import call_functions
 # from video_subtitles import call_subtitle_functions
 from sqlite_db import (get_user_balance, update_balance,
                        save_json_file, get_all_user_details, get_login_history,
-                       delete_user, clear_login_history)
+                       delete_user, clear_login_history, delete_comment, filter_abusive_comments, retrieve_user_comments)
 
 
 
@@ -698,6 +698,32 @@ def manage_users(username):
                         # CLEAR LOGIN HISTORY
                         clear_login_history()
                         st.success("Login history cleared successfully")
+                else:
+                    st.info("No login info yet")
+            with st.expander("Delete user comment"):
+                # GET LOGIN HISTORY
+                results = retrieve_user_comments()
+                if results:
+                    df = pd.DataFrame(results, columns=["id", "username", "full_name", "comment", "comment_time"])
+                    username_chosen = st.selectbox("Select username to delete comment", [df["username"]])
+                    if st.button("delete comment"):
+                        delete_comment(username_chosen)
+                        st.success("user_comment was successfully deleted")
+
+                else:
+                    st.info("No login info yet")
+            with st.expander("Filter abusive comment"):
+                # GET LOGIN HISTORY
+                results = retrieve_user_comments()
+                if results:
+                    df = pd.DataFrame(results, columns=["id", "username", "full_name", "comment", "comment_time"])
+                    username_chosen = st.selectbox("Select username to delete comment", [df["username"]])
+                    update_message = st.text_area("enter message to update with")
+                    if update_message and username_chosen:
+                        if st.button("update comment"):
+                            filter_abusive_comments(username_chosen, update_message)
+                            st.success("user_comment was successfully deleted")
+
                 else:
                     st.info("No login info yet")
         else:

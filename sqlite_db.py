@@ -323,6 +323,28 @@ def user_commented(username):
         st.error(f"Error: {e}")
 
 
+def delete_comment(username):
+    try:
+        connection = sqlite3.connect('transcribed_data.db')
+        cursor = connection.cursor()
+        cursor.execute("delete from user_comments where username=?",
+                       (username,))
+        connection.commit()
+    except Exception as e:
+        st.error(f"Error: {e}")
+
+
+def filter_abusive_comments(username, comment):
+    try:
+        connection = sqlite3.connect('transcribed_data.db')
+        cursor = connection.cursor()
+        cursor.execute("update user_comments set comment=? where username=?",
+                       (comment, username))
+        connection.commit()
+    except Exception as e:
+        st.error(f"Error: {e}")
+
+
 def retrieve_user_comments():
     try:
         connection = sqlite3.connect('transcribed_data.db')
