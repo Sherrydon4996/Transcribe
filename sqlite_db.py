@@ -308,16 +308,16 @@ def save_user_comments(username, full_name, comment):
         st.error(f"Error: {e}")
 
 
-def add_to_user_comment(username, full_name, comment):
-    connection = sqlite3.connect('transcribed_data.db')
-    cursor = connection.cursor()
-    cursor.execute("insert into user_comments(username, full_name, comment) values(?,?,?)",
-                   (username, full_name, comment))
-    connection.commit()
-    connection.close()
+# def add_to_user_comment(username, full_name, comment):
+#     connection = sqlite3.connect('transcribed_data.db')
+#     cursor = connection.cursor()
+#     cursor.execute("insert into user_comments(username, full_name, comment) values(?,?,?)",
+#                    (username, full_name, comment))
+#     connection.commit()
+#     connection.close()
 
 
-add_to_user_comment("peterN", "peter ngacha", "This app is awsome, now i will be visiting you github often")
+# add_to_user_comment("peterN", "peter ngacha", "This app is awsome, now i will be visiting you github often")
 
 
 def retrieve_user_comments():
