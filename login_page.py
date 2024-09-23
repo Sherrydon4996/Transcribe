@@ -357,7 +357,7 @@ def logged_in():
                     for index, com in enumerate(results):
                         st.markdown(f"""
                                     <div style="background-color:black; width:100%; height:200px; position:realtive">
-                                        <h4 style="color:red; position:absolute; left:2%; top:30%; font-family:sans-serif; text-transform:capitalize; text-decoration:underline;">{index + 1}. {com[2]}  <span style="clor:blue" font-size:15px;>time: {com[4]}</span></h4>
+                                        <h4 style="color:red; position:absolute; left:2%; top:30%; font-family:sans-serif; text-transform:capitalize;">{index + 1}. {com[2]} &nbsp;<span style="clor:blue" font-size:15px;>time: {com[4]}</span></h4>
                                         <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{com[3]}<p>
                                     </div>
                                     
