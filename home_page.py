@@ -459,7 +459,7 @@ def load_english_files(login_username):
                             json_datafile = json.dumps(json_data)
                             # SAVE JSON FILE TO DATABASE
                             save_json_file(json_datafile, login_username)
-                            st.success("json file saved to database")
+                            # st.success("json file saved to database")
                     else:
                         minutes, duration = divmod(duration, 60)
                         st.error(f"Oops! your balance is insufficient! Contact 0711140899 for recharge.")
