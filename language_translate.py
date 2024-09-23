@@ -114,7 +114,7 @@ def translate_language(username):
                 st.warning("Remember to cancel uploaded files to avoid translating the wrong files")
 
             elif displayed == "Text":
-                text = st.text_area("Enter text or upload file to translate", "", height=200)
+                text = st.text_area("You can manually type text in this area, or paste", "", height=200)
                 st.warning("Remember to cancel any previous uploaded files to avoid translating the wrong files")
         except:
             return
