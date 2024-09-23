@@ -352,12 +352,7 @@ def logged_in():
                             st.error("you can only comment once!")
                         else:
                             save_user_comments(new_username, full_name, comment)
-                            # data["user_views"].append({"full_name": results, "comment": comment})
-                            # with open("user_comments.json", "w") as file2:
-                            #     json.dump(data, file2, indent=4)
-                        comment = ""
                 with st.expander("View comments"):
-                    # for index, data in enumerate(data["user_views"]):
                     results = retrieve_user_comments()
                     for index, com in enumerate(results):
                         st.markdown(f"""
