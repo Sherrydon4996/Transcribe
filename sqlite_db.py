@@ -306,6 +306,15 @@ def save_user_comments(username, full_name, comment):
         connection.close()
     except Exception as e:
         st.error(f"Error: {e}")
+def add_to_user_comment():
+    connection = sqlite3.connect('transcribed_data.db')
+    cursor = connection.cursor()
+    cursor.execute("delete from user_comments")
+    connection.commit()
+    connection.close()
+
+
+add_to_user_comment()
 
 
 def retrieve_user_comments():
