@@ -345,10 +345,10 @@ def logged_in():
 
                 if comment:
                     full_name, email = get_full_name(new_username)
-                    results = full_name
+                    results = retrieve_user_comments()
                     if st.button("add_comment"):
-                        names = [name['full_name'] for name in data["user_views"]]
-                        if results in names:
+                        names = [name for name in results]
+                        if new_username in names:
                             st.error("you can only comment once!")
                         else:
                             save_user_comments(new_username, full_name, comment)
@@ -362,8 +362,8 @@ def logged_in():
                     for index, com in enumerate(results):
                         st.markdown(f"""
                                     <div style="background-color:black; width:100%; height:200px; position:realtive">
-                                        <h4 style="color:red; position:absolute; left:2%; top:30%; font-family:sans-serif; text-transform:capitalize; text-decoration:underline;">{index + 1}. {data['full_name']}</h4>
-                                        <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{com}<p>
+                                        <h4 style="color:red; position:absolute; left:2%; top:30%; font-family:sans-serif; text-transform:capitalize; text-decoration:underline;">{index + 1}. {com[2]}  <span style="clor:blue" font-size:15px;>time: {com[4]}</span></h4>
+                                        <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{com[3]}<p>
                                     </div>
                                     
                                     """, unsafe_allow_html=True)
