@@ -134,7 +134,7 @@ def english_transcription():
             " Experience the power of our advanced transcription app for seamless and accurate audio-to-text conversion.")
         banner_html = f"""
         </div>
-        <div style="max-width: 100%; padding: 15px; background-color: transparent; border-radius: 5px; box-sizing: border-box; margin: 0 auto;">
+        <div style="max-width: 100%; padding: 15px; background-color: rgba(255, 0, 0,0.3) ; border-radius: 5px; box-sizing: border-box; margin: 0 auto;">
         <h2 style="color: white; text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: 10px;">🎙️ Transcription Service</h2>
         <h4 style="color: white; text-align: center; font-size: clamp(1rem, 3vw, 1.5rem); margin: 0; overflow-wrap: break-word; word-wrap: break-word;">
             {content}
@@ -150,7 +150,7 @@ def english_transcription():
                    "high-quality output, ensuring precision and ease of use for professionals and enthusiasts alike.")
         banner_html = f"""
          
-        <div style="max-width: 100%; padding: 15px; background-color: transparent; border-radius: 5px; box-sizing: border-box; margin: 0 auto;">
+        <div style="max-width: 100%; padding: 15px; background-color: rgba(255, 0, 0,0.3) ; border-radius: 5px; box-sizing: border-box; margin: 0 auto;">
             <h2 style="color: white; text-align: center; font-size: clamp(1.5rem, 4vw, 2rem); margin-bottom: 10px;">🎙️ Transcription Service</h2>
             <h4 style="color: white; text-align: center; font-size: clamp(1rem, 3vw, 1.5rem); margin: 0; overflow-wrap: break-word; word-wrap: break-word;">
                 {content}
@@ -205,7 +205,7 @@ def process_english_audio_files(audio_bytes_file, english_uploaded_audio):
 def transcription_banner():
     st.markdown(
         """
-        <div style="background-color:overflow:auto; rgba(255, 0, 0,0.4) ; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <div style="background-color:rgba(255, 0, 0,0.4) ; overflow:auto; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
             <h2 style="color: white; text-align: center;">We have three different transcription types</h2>
             <ul style="font-size: 16px; line-height: 1.5;">
                 <li><strong>English High-Quality Transcription:</strong> Quality transcription of English audio @ <strong> Ksh. 6 per audio minute only.</strong></li>
