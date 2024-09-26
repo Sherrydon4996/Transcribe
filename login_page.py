@@ -337,6 +337,7 @@ def logged_in():
                     """,
                     unsafe_allow_html=True
                 )
+
                 st.markdown("### leave your comment or recomendation here:")
                 # USER COMMENTS
                 comment = st.text_area("",
@@ -356,9 +357,9 @@ def logged_in():
                     results = retrieve_user_comments()
                     for index, com in enumerate(results):
                         st.markdown(f"""
-                                    <div style="background-color:black; width:100%; height:200px; position:relative"; overflow:auto;>
-                                        <h4 style="color:red; position:absolute; left:2%; top:30%; font-family:sans-serif; text-transform:capitalize;">{index + 1}. {com[2]} &nbsp;<span style="color:blue;font-size:12px;">time: {com[4]}</span></h4>
-                                        <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{com[3]}<p>
+                                    <div style="background-color:black; width:100%; height:auto; position:relative"; overflow:auto;>
+                                        <h4 style="color:red; position:absolute; left:2%; top:10%; font-family:sans-serif; text-transform:capitalize;">{index + 1}. {com[2]} &nbsp;<span style="color:blue;font-size:12px;">time: {com[4]}</span></h4>
+                                        <p style="font-family: courier; position:absolute; left:2%; top:20%; color:green;">{com[3]}<p>
                                     </div>
                                     
                                     """, unsafe_allow_html=True)
