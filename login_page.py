@@ -250,34 +250,22 @@ def logged_in():
     if not st.session_state.is_logged_in:
         register_message = "Not registered yet? Join us today and start transcribing with ease enjoying cheap and affordable transcription service <b style='color:black;'> @ ksh. 6/per audio minute </b> with 2 free minutes and other free services like text analysis and multiple translation languages available!</b>"
         register_css = f"""
-            <div style="width:100%; overflow:auto; position:relative; min-height:100px; 
-                        background:linear-gradient(to top right, rgba(255,0,0,0.4), rgba(0,255,0,0.5),rgba(100,150,250,0.6), rgba(0,0,255,0.5)); 
-                        padding:20px; border-radius:8px; text-align:center; 
-                        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); display: flex; 
-                        flex-direction: column; align-items: center; justify-content: center;">
-                <div style="color:gold; font-size:16px; font-weight:500; margin-bottom:10px;">Create an account</div>
-                <div style="color:#F7F9F9; font-size:14px; font-weight:500; max-width:90%; margin-bottom:10px;">
-                    {register_message}
-                </div>
-                <div style="color:gold; font-size:16px; font-weight:500;">Login</div>
+            <div style="width:100%; overflow:auto; position:relative; min-height:100px; background:linear-gradient(to top right, rgba(255,0,0,0.4), rgba(0,255,0,0.5),rgba(100,150,250,0.6), rgba(0,0,255,0.5)); padding:20px; border-radius:8px; 
+                        text-align:center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); justify-content: space-between; align-items: center;">
+                <p style="color:#F7F9F9; position:absolute; font-size:16px; overflow:hidden; font-weight:500; left:5%; right:5%; margin: 0;">{register_message}</p>
             </div>
-
-            <style>
-                @media screen and (max-width: 768px) {{
-                    div {{
-                        flex-direction: column;
-                        font-size: 14px;
-                        padding: 10px;
-                    }}
-                    div > div {{
-                        margin-bottom: 5px;
-                        text-align: center;
-                    }}
-                }}
-            </style>
         """
         st.markdown(register_css, unsafe_allow_html=True)
-
+        register_message = "@HarryPro-Transcribe services"
+        register_css = f"""
+                    <div style="width:100%; overflow:auto; position:relative; min-height:50px; background:linear-gradient(to top right, rgba(255,0,0,0.4), rgba(0,255,0,0.5),rgba(100,150,250,0.6), rgba(0,0,255,0.5)); padding:20px; border-radius:8px; 
+                                text-align:center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); justify-content: space-between; align-items: center;">
+                        <p style="color:gold; font-size:16px; font-weight:500; position:absolute; margin: 0; left:2%; ">Create an account</p>
+                        <p style="color:#F7F9F9; position:absolute; font-size:16px; overflow:hidden; font-weight:500; left:30%; right:30%; margin: 0;">{register_message}</p>
+                        <p style="color:gold; font-size:16px; position:absolute; font-weight:500; margin: 0; right:2%;">Login</p>
+                    </div>
+                """
+        st.markdown(register_css, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
         col5, col6 = st.columns(2)
         with col5:
