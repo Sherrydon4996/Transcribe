@@ -70,7 +70,8 @@ def header():
             <h2 style="margin-bottom: 10px; color:#E67E22;">Welcome to @Harry's Transcription Service Provider</h2>
             <p style="font-size: 16px; font-weight: bold;">The following services are available:</p>
             <div style="
-                background: #F7F9F9; 
+                background: #F7F9F9;
+                overflow: auto; 
                 border-radius: 5px; 
                 padding: 10px; 
                 margin: 10px auto; 
@@ -251,8 +252,8 @@ def logged_in():
         register_css = f"""
             <div style="width:100%; overflow:auto; position:relative; min-height:100px; background:linear-gradient(to top right, rgba(255,0,0,0.4), rgba(0,255,0,0.5),rgba(100,150,250,0.6), rgba(0,0,255,0.5)); padding:20px; border-radius:8px; 
                         text-align:center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); justify-content: space-between; align-items: center;">
-                <p style="color:gold; font-size:16px; font-weight:500; position:absolute; margin: 0; left:2%; ">Create an account</p>
-                <p style="color:#F7F9F9; position:absolute; font-size:16px; font-weight:500; left:20%; right:10%; margin: 0;">{register_message}</p>
+                <p style="color:gold; font-size:16px; font-weight:500; overflow:hidden; position:absolute; margin: 0; left:2%; ">Create an account</p>
+                <p style="color:#F7F9F9; position:absolute; font-size:16px; overflow:hidden; font-weight:500; left:20%; right:10%; margin: 0;">{register_message}</p>
                 <p style="color:gold; font-size:16px; position:absolute; font-weight:500; margin: 0; right:2%;">Login</p>
             </div>
         """
@@ -355,14 +356,15 @@ def logged_in():
                             save_user_comments(new_username, full_name, comment)
                 with st.expander("View comments"):
                     results = retrieve_user_comments()
-                    for index, com in enumerate(results):
-                        st.markdown(f"""
-                                    <div style="background-color:black; width:100%; min-height:100px; position:relative"; overflow:auto;>
-                                        <h4 style="color:red; position:absolute; left:2%; top:5%; font-family:sans-serif; text-transform:capitalize;">{index + 1}. {com[2]} &nbsp;<span style="color:blue;font-size:12px;">time: {com[4]}</span></h4>
-                                        <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{com[3]}<p>
-                                    </div>
-                                    
-                                    """, unsafe_allow_html=True)
+                    if results is not None:
+                        for index, com in enumerate(results):
+                            st.markdown(f"""
+                                        <div style="background-color:black; width:100%; min-height:100px; position:relative"; overflow:auto;>
+                                            <h4 style="color:red; position:absolute; left:2%; top:5%; font-family:sans-serif; text-transform:capitalize;">{index + 1}. {com[2]} &nbsp;<span style="color:blue;font-size:12px;">time: {com[4]}</span></h4>
+                                            <p style="font-family: courier; position:absolute; left:2%; top:50%; color:green;">{com[3]}<p>
+                                        </div>
+                                        
+                                        """, unsafe_allow_html=True)
 
 
 

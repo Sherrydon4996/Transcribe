@@ -148,6 +148,7 @@ def translate_language(username):
             }
             </style>
             """, unsafe_allow_html=True)
+            st.write("##")
 
             if text:
                 detected_language = detect_language(text)
