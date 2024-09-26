@@ -231,7 +231,7 @@ def page_appearance():
     st.markdown("""
     <style>
      .stApp{
-      background-color: rgba(255,0,0,0.2);
+      background-color: linear-gradient(from top bottom, rgba(255, 0,0,0.8), rgba(0,255,0,0.5), rgba(0,0,255,0.4));
     }
     </style>
     """, unsafe_allow_html=True)
