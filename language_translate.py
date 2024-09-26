@@ -103,6 +103,7 @@ def translate_language(username):
     displayed = st.selectbox("Chose a file to translate", ["Transcribed_File", "Uploaded_File", "Text"])
     col1, col2, col3 = st.columns([2, 1, 2])
     with col1:
+        st.markdown("<br><br>", unsafe_allow_html=True)
         try:
             if displayed == "Uploaded_File":
                 text = st.text_area("This space holds the transcribed text data", st.session_state.uploaded,
@@ -148,7 +149,6 @@ def translate_language(username):
             }
             </style>
             """, unsafe_allow_html=True)
-            st.markdown("<br><br>", unsafe_allow_html=True)
 
             if text:
                 detected_language = detect_language(text)
@@ -165,7 +165,9 @@ def translate_language(username):
                 st.error("Please enter text to translate.")
 
     with col3:
+        st.markdown("<br><br>", unsafe_allow_html=True)
         st.text_area("Translated Text", translated_text or "", height=200)
+
 
 
 if __name__ == "__main__":
