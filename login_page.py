@@ -359,7 +359,7 @@ def logged_in():
                         st.markdown(f"""
                                     <div style="background-color:black; width:100%; min-height:100px; position:relative"; overflow:auto;>
                                         <h4 style="color:red; position:absolute; left:2%; top:5%; font-family:sans-serif; text-transform:capitalize;">{index + 1}. {com[2]} &nbsp;<span style="color:blue;font-size:12px;">time: {com[4]}</span></h4>
-                                        <p style="font-family: courier; position:absolute; left:2%; top:20%; color:green;">{com[3]}<p>
+                                        <p style="font-family: courier; position:absolute; left:2%; top:35%; color:green;">{com[3]}<p>
                                     </div>
                                     
                                     """, unsafe_allow_html=True)
