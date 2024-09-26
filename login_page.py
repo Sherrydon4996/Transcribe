@@ -262,7 +262,7 @@ def logged_in():
                     <div style="width:100%; overflow:auto; position:relative; min-height:50px; background:linear-gradient(to top right, rgba(255,0,100,220.4), rgba(0,0,0,0.7),rgba(100,150,250,0.6), rgba(0,0,255,0.5)); padding:20px; border-radius:8px; 
                                 text-align:center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); justify-content: space-between; align-items: center;">
                         <p style="color:gold; font-size:16px; font-weight:500; position:absolute; margin: 0; left:2%; ">Create an account</p>
-                        <p style="color:#F7F9F9; position:absolute; font-size:16px; overflow:hidden; font-weight:500; left:40%; right:30%; margin: 0;">{register_message}</p>
+                        <p style="color:#F7F9F9; position:absolute; font-size:16px; overflow:hidden; font-weight:500; left:40%; right:20%; margin: 0;">{register_message}</p>
                         <p style="color:gold; font-size:16px; position:absolute; font-weight:500; margin: 0; right:2%;">Login</p>
                     </div>
                 """
