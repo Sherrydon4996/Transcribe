@@ -252,9 +252,9 @@ def logged_in():
         register_css = f"""
             <div style="width:100%; overflow:auto; position:relative; min-height:100px; background:linear-gradient(to top right, rgba(255,0,0,0.4), rgba(0,255,0,0.5),rgba(100,150,250,0.6), rgba(0,0,255,0.5)); padding:20px; border-radius:8px; 
                         text-align:center; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); justify-content: space-between; align-items: center;">
-                <p style="color:gold; font-size:16px; font-weight:500; overflow:hidden; position:absolute; margin: 0; left:2%; ">Create an account</p>
+                <div style="color:gold; font-size:16px; font-weight:500; overflow:wrap; position:absolute; margin: 0; left:2%; ">Create an account</div>
                 <p style="color:#F7F9F9; position:absolute; font-size:16px; overflow:hidden; font-weight:500; left:20%; right:10%; margin: 0;">{register_message}</p>
-                <p style="color:gold; font-size:16px; position:absolute; font-weight:500; margin: 0; right:2%;">Login</p>
+                <div style="color:gold; font-size:16px; width:50px; height:100px; position:absolute; font-weight:500; margin: 0; right:2%;">Login</div>
             </div>
         """
         st.markdown(register_css, unsafe_allow_html=True)
