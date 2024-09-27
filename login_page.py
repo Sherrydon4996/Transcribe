@@ -340,7 +340,7 @@ def logged_in():
                     <div style="background-color: #34495E; padding: 15px; overflow:auto; border-radius: 8px; margin-bottom: 20px;">
                         <h3 style="color: #ECF0F1; text-align: center;">Hello and Welcome {new_username}</h3>
                         <p style="color: #BDC3C7; font-size: 16px; text-align: center;">
-                            Please note that the method of payment has yet to be configured. The app is still in the testing phase.
+                            Please note that the method of payment has yet to be configured.(working on it)
                             For top-up and access to services, contact the admin @ <strong>+254711140899</strong> for both calls and WhatsApp.
                         </p>
                     </div>
