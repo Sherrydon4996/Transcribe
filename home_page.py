@@ -606,7 +606,7 @@ def menu_bar():
     with st.container():
         options_menu_bar = option_menu(
             menu_title="Transcription menu",
-            options=["English_Swahili Transcription", "Detect and translate language", "text_analysis", "add_video_subtitles", "Text to audio files", "admins_page"],
+            options=["English_Swahili Transcription", "Detect and translate language", "text_analysis", "Text to audio files", "add_video_subtitles(incomplete)",  "admins_page"],
             icons=["bi-emoji-smile", "bi-search", "bi-shield-lock", "bi-key", "bi-journal-text"],
             orientation="horizontal",
             key="transcription_menu_key"
