@@ -333,7 +333,7 @@ def logged_in():
                     if currency == "KSH":
                         st.subheader(f":red[you balance: ksh. {st.session_state.user_currency}]")
                     else:
-                        st.subheader(f":red[you balance: ${st.session_state.USD}]")
+                        st.subheader(f":red[your balance: ${st.session_state.USD}]")
 
                 st.markdown(
                     f"""
