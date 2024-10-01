@@ -23,7 +23,7 @@ from english_transcription import save_english_transcript
 from swahili_transcription import save_transcript_swahili
 from video_to_audio import export_full_audio
 from upload_video_convert_audio_format import upload_video_and_convert_audio_format
-from text_to_audio import convert_text_to_audio, footer_notes
+from text_to_audio import convert_text_to_audio
 from language_translate import translate_language
 from text_analysis import call_functions
 # from video_subtitles import call_subtitle_functions
@@ -38,23 +38,23 @@ number_file = random.choice(numbers)
 admin_username = os.environ.get("USERNAME")
 
 
-def introductory_section():
-    text = ("This platform allows you to accurately and quickly transcribe audio files. Using our advanced"
-            " speech recognition technology, you can easily convert audio into text. Whether you are a student,"
-            " writer, or researcher, here you get text from your audio files effortlessly. We offer"
-            " transcription services in English and Swahili to meet your needs. Thank you for visiting our site,"
-            " and we hope you enjoyed our services.")
-    st.markdown(f"""
-    <div style="background-color:#4CAF50;overflow:auto; padding: 20px; border-radius: 10px; text-align: center;">
-        <h1 style="color: white; font-family: 'Arial', sans-serif;">
-            Brief Introduction
-        </h1>
-        <p style="color: white; font-size: 18px;">
-            {text}
-        </p>
-    </div>
-    <br></br>
-    """, unsafe_allow_html=True)
+# def introductory_section():
+#     text = ("This platform allows you to accurately and quickly transcribe audio files. Using our advanced"
+#             " speech recognition technology, you can easily convert audio into text. Whether you are a student,"
+#             " writer, or researcher, here you get text from your audio files effortlessly. We offer"
+#             " transcription services in English and Swahili to meet your needs. Thank you for visiting our site,"
+#             " and we hope you enjoyed our services.")
+#     st.markdown(f"""
+#     <div style="background-color:#4CAF50;overflow:auto; padding: 20px; border-radius: 10px; text-align: center;">
+#         <h1 style="color: white; font-family: 'Arial', sans-serif;">
+#             Brief Introduction
+#         </h1>
+#         <p style="color: white; font-size: 18px;">
+#             {text}
+#         </p>
+#     </div>
+#     <br></br>
+#     """, unsafe_allow_html=True)
 
 
 def microphone_icon_appearance():
@@ -750,7 +750,7 @@ def expanded_menu_bar(options_menu_bar, json_file, username):
 
 
 def recall_functions(user_name):
-    introductory_section()
+    # introductory_section()
     microphone_icon_appearance()
     button_styling()
     menu_bar_options = menu_bar()
@@ -759,7 +759,6 @@ def recall_functions(user_name):
     expanded_menu_bar(menu_bar_options, json_file, user_name)
     st.markdown("---")
     st.markdown("© 2024 Audio Transcription App | Developed by @Harry")
-    footer_notes()
     st.write("##")
 
 

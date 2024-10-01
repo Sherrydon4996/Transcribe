@@ -7,6 +7,7 @@ import bcrypt
 from sqlite_db import (save_credentials_to_database, save_login_history,
                        get_logins, update_password, get_full_name, get_user_balance,
                        check_duplicate_registrations, save_user_comments, retrieve_user_comments, user_commented)
+from text_to_audio import footer_notes
 
 st.set_page_config(
     page_title="@HarryProTranscribe",
@@ -381,6 +382,7 @@ def logged_in():
 
         else:
             st.error("no username", new_username)
+            footer_notes()
         if st.button("Logout"):
             st.session_state.is_logged_in = False
             st.session_state.show_register = False
