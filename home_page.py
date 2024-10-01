@@ -210,7 +210,7 @@ def transcription_banner():
             <ul style="font-size: 16px; line-height: 1.5;">
                 <li><strong>English High-Quality Transcription:</strong> Quality transcription of English audio @ <strong> Ksh. 6 per audio minute only.</strong></li>
                 <li><strong>Swahili High-Quality Transcription:</strong> Charges are <strong>Ksh. 6 per audio minute</strong>.</li>
-                <li><strong>Economy Plan Transcription:</strong> Charges are <strong>Ksh. 3 per audio minute</strong>. 
+                <li><strong>Economy Plan Transcription:</strong> Services are <strong>Free</strong>. 
                 <br>Note: Economy plan has a bit lower quality results but is helpful for basic needs.</li>
             </ul>
         </div>
@@ -368,9 +368,8 @@ def economy_transcription_plan(login_username):
                         text = recognizer.recognize_google(audio)
                         st.text_area("Transcribed text", text, height=300)
                         # UPDATE USER BALANCE
-                        update_balance("-", total_amount, login_username)
-                        st.success(
-                            f"You audio file has been successfully transcribed. total amount deducted: ksh. {total_amount}")
+                        # update_balance("-", total_amount, login_username)
+                        st.success(f"Your audio file has been successfully transcribed")
                     except sr.UnknownValueError:
                         return "Google Speech Recognition could not understand the audio"
                     except sr.RequestError:
