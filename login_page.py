@@ -383,6 +383,9 @@ def logged_in():
         else:
             st.error("no username", new_username)
         footer_notes()
+        st.markdown("---")
+        st.markdown("© 2024 Audio Transcription App | Developed by @Harry")
+        st.write("##")
         if st.button("Logout"):
             st.session_state.is_logged_in = False
             st.session_state.show_register = False

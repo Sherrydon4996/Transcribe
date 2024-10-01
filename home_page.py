@@ -757,9 +757,7 @@ def recall_functions(user_name):
     session_state(menu_bar_options, user_name)
     json_file = get_json_database(user_name)
     expanded_menu_bar(menu_bar_options, json_file, user_name)
-    st.markdown("---")
-    st.markdown("© 2024 Audio Transcription App | Developed by @Harry")
-    st.write("##")
+
 
 
 if __name__ == "__main__":
