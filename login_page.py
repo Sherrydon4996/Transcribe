@@ -40,7 +40,7 @@ def header():
     features = [
         "High quality English audio and video Transcription",
         "Swahili audio and video Transcription",
-         "Language Translation(Transcribe and translate)",
+        "Language Translation(Transcribe and translate)",
         "Language Detection",
         "Deep teaxt analysis(test yourself for more)",
         "Text to speech services",
@@ -347,6 +347,8 @@ def logged_in():
                     """,
                     unsafe_allow_html=True
                 )
+                # APPLICATION BODY
+                recall_functions(new_username)
 
                 st.markdown("### leave your comment or recomendation here:")
                 # USER COMMENTS
@@ -379,9 +381,6 @@ def logged_in():
 
         else:
             st.error("no username", new_username)
-        this_username = cookies["user_name"]
-        if this_username:
-            recall_functions(this_username)
         if st.button("Logout"):
             st.session_state.is_logged_in = False
             st.session_state.show_register = False
