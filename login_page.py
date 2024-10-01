@@ -382,7 +382,7 @@ def logged_in():
 
         else:
             st.error("no username", new_username)
-            footer_notes()
+        footer_notes()
         if st.button("Logout"):
             st.session_state.is_logged_in = False
             st.session_state.show_register = False
